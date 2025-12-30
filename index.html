@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحدي مخرج القنوات التعليمية</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        .card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .option-btn {
+            transition: all 0.2s ease;
+        }
+        .option-btn:hover {
+            transform: translateX(-5px);
+            background: rgba(59, 130, 246, 0.2);
+        }
+        .progress-fill {
+            transition: width 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center p-4">
+
+    <!-- Splash Screen -->
+    <div id="start-screen" class="max-w-2xl w-full text-center p-8 card rounded-3xl shadow-2xl">
+        <div class="mb-6 inline-block p-4 bg-blue-600 rounded-full shadow-lg shadow-blue-500/50">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
+        </div>
+        <h1 class="text-4xl font-bold mb-4">تحدي مخرج القنوات التعليمية</h1>
+        <p class="text-gray-300 mb-8 text-lg">هل أنت مستعد لاختبار مهاراتك في إنتاج الفيديو التعليمي؟ تقمص دور المخرج وأجب على الأسئلة التقنية لتصل إلى أعلى مستويات الاحتراف!</p>
+        <!-- Small leaderboard preview on start -->
+        <div class="mb-6 text-right bg-gray-800/40 p-4 rounded-lg">
+            <div class="flex items-center justify-between mb-2">
+                <div class="font-semibold">المتصدرون</div>
+                <div class="text-xs text-gray-400">أعلى 5</div>
+            </div>
+                <div id="start-leaderboard-list" class="space-y-1 text-sm text-gray-200"></div>
+                <script>
+                    // Populate the start screen leaderboard once the scripts and DOM are ready
+                    document.addEventListener('DOMContentLoaded', function () {
+                        try {
+                            if (window.leaderboard && typeof window.leaderboard.renderTo === 'function') {
+                                // If the helper exposes a ready promise, wait for it; otherwise call directly
+                                if (window.leaderboard.ready && typeof window.leaderboard.ready.then === 'function') {
+                                    window.leaderboard.ready.then(() => window.leaderboard.renderTo('start-leaderboard-list', 5));
+                                } else {
+                                    window.leaderboard.renderTo('start-leaderboard-list', 5);
+                                }
+                            }
+                        } catch (e) {
+                            console.error('Auto-render start leaderboard failed', e);
+                        }
+                    });
+                </script>
+        </div>
+
+        <div class="flex flex-col items-center">
+            <div id="quiz-status" class="text-sm text-gray-300 mb-3">جارٍ جلب الأسئلة...</div>
+            <button id="start-btn" onclick="startGame()" disabled class="bg-blue-600/60 text-white font-bold py-3 px-12 rounded-full text-xl transition-all transform">
+                ابدأ التحدي الآن
+            </button>
+        </div>
+    </div>
+
+    <!-- Game Container -->
+    <div id="game-container" class="hidden max-w-2xl w-full">
+        <!-- Header Info -->
+        <div class="flex justify-between items-center mb-6 px-4">
+            <div class="flex items-center gap-2">
+                <span class="text-gray-400">السؤال:</span>
+                <span id="question-count" class="font-bold text-blue-400 text-xl">1/10</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="text-gray-400">النقاط:</span>
+                <span id="score" class="font-bold text-green-400 text-xl">0</span>
+            </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="w-full bg-gray-700 h-2 rounded-full mb-8 overflow-hidden">
+            <div id="progress-bar" class="progress-fill bg-blue-500 h-full w-0"></div>
+        </div>
+
+        <!-- Question Card -->
+        <div class="card p-8 rounded-3xl shadow-2xl">
+            <h2 id="question-text" class="text-2xl font-bold mb-8 leading-relaxed">جاري تحميل السؤال...</h2>
+            <div id="options-container" class="space-y-4">
+                <!-- Options will be injected here -->
+            </div>
+        </div>
+
+        <!-- Feedback Area -->
+        <div id="feedback" class="mt-6 text-center h-8 font-bold text-lg hidden"></div>
+    </div>
+
+    <!-- Results Screen -->
+    <div id="results-screen" class="hidden max-w-2xl w-full text-center p-8 card rounded-3xl shadow-2xl">
+        <h2 class="text-4xl font-bold mb-4">انتهى التحدي!</h2>
+        <div class="text-6xl font-bold text-blue-500 mb-6" id="final-score">0</div>
+        <p id="evaluation-text" class="text-xl text-gray-300 mb-4"></p>
+
+        <!-- Career Rank Display -->
+        <div id="career-rank" class="mb-4 text-lg font-semibold text-yellow-300"></div>
+
+        <!-- Name input & submit to leaderboard -->
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mb-4">
+            <input id="player-name" type="text" placeholder="اكتب اسمك للوحة المتصدرين" class="p-3 rounded-lg text-black w-full sm:w-2/3" />
+            <button id="submit-score-btn" onclick="submitScoreFromResults()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full">نشر النتيجة</button>
+            <button id="view-leaderboard-btn" onclick="window.leaderboard && window.leaderboard.renderTo && window.leaderboard.renderTo('leaderboard-list',10)" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-full">مشاهدة المتصدرين</button>
+        </div>
+
+        <!-- Leaderboard area (filled by leaderboard.js) -->
+        <div id="leaderboard-container" class="text-right bg-gray-800/40 p-4 rounded-lg max-h-72 overflow-auto">
+            <div id="leaderboard-list" class="space-y-2 text-sm text-gray-200"></div>
+        </div>
+
+        <div class="mt-6">
+            <button onclick="location.reload()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-12 rounded-full text-xl transition-all transform hover:scale-105">
+                إعادة المحاولة
+            </button>
+        </div>
+    </div>
+    <script>
+    
+        let quizData = [
+            {
+                question: "ما هي القطعة المسؤولة عن تحويل الضوء إلى إشارات كهربائية داخل الكاميرا؟",
+                options: ["العدسة البصرية", "شريحة CCD", "وحدة التخزين", "منظار الرؤية"],
+                correct: 1,
+                hint: "تعمل كمصفوفة من المجسات الضوئية (بكسلات)."
+            },
+            {
+                question: "أي من دقات العرض التالية تمثل الـ Full HD؟",
+                options: ["1280 × 720", "3840 × 2160", "1920 × 1080", "640 × 480"],
+                correct: 2,
+                hint: "تعرف اختصاراً بـ 1080p."
+            },
+            {
+                question: "عند الرغبة في إعطاء إيحاء بعظمة وقوة المعلم، أي زاوية نستخدم؟",
+                options: ["زاوية مرتفعة", "زاوية مستوى النظر", "زاوية مائلة", "زاوية منخفضة"],
+                correct: 3,
+                hint: "تكون الكاميرا أسفل الشخص وتنظر للأعلى."
+            },
+            {
+                question: "ما وظيفة الضوء الخلفي (Back Light) في قاعدة الإضاءة الثلاثية؟",
+                options: ["إنارة وجه الشخص", "فصل الشخص عن الخلفية", "إلغاء جميع الظلال", "تغيير لون الخلفية"],
+                correct: 1,
+                hint: "يرسم هالة ضوئية حول الأكتاف والرأس."
+            },
+            {
+                question: "في برنامج Filmora، ماذا يفعل الاختصار Ctrl + B؟",
+                options: ["حفظ المشروع", "تصدير الفيديو", "تقسيم الفيديو (Split)", "إضافة انتقال"],
+                correct: 2,
+                hint: "يستخدم لقص الكليب في مكان الوقوف."
+            },
+            {
+                question: "ما هو معدل الإطارات (FPS) المناسب لتصوير تجربة علمية سريعة لعرضها ببطء؟",
+                options: ["15 FPS", "24 FPS", "30 FPS", "60 FPS أو أكثر"],
+                correct: 3,
+                hint: "كلما زاد العدد، زادت سلاسة الحركة عند الإبطاء."
+            },
+            {
+                question: "اللقطة التي تظهر المعلم من الصدر للأعلى وتعتبر مثالية للشرح تسمى:",
+                options: ["لقطة قريبة (CU)", "لقطة متوسطة (MS)", "لقطة عامة (LS)", "لقطة الركبة"],
+                correct: 1,
+                hint: "تسمح برؤية تعبيرات الوجه وحركة اليدين معاً."
+            },
+            {
+                question: "أي نوع من الزووم يؤدي إلى تشويه الصورة (Pixelation) عند التكبير؟",
+                options: ["الزووم البصري", "الزووم الميكانيكي", "الزووم الرقمي", "الزووم اليدوي"],
+                correct: 2,
+                hint: "هو عملية تكبير برمجية وليس عبر العدسات."
+            },
+            {
+                question: "ما هي ميزة استخدام مصابيح الـ LED في الاستوديو التعليمي؟",
+                options: ["توليد حرارة عالية جداً", "استهلاك مرتفع للكهرباء", "خفة الوزن وعدم توليد حرارة", "صعوبة التحكم في ألوانها"],
+                correct: 2,
+                hint: "هي تكنولوجيا العصر الموفرة للطاقة."
+            },
+            {
+                question: "عملية 'فصل الصوت' (Detach Audio) في المونتاج تهدف إلى:",
+                options: ["حذف الفيديو نهائياً", "جعل الصوت أسرع", "معالجة الصوت في مسار مستقل", "تغيير دقة الفيديو"],
+                correct: 2,
+                hint: "تسمح باستبدال الصوت الأصلي بتعليق صوتي نقي."
+            }
+        ]; 
+
+    let currentQuestion = 0;
+    let score = 0;
+    // attempts: number of incorrect attempts made for the current question (0 or 1)
+    let attempts = 0;
+
+        function startGame() {
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('game-container').classList.remove('hidden');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const q = quizData[currentQuestion];
+            document.getElementById('question-text').innerText = q.question;
+            // reset attempts for this question
+            attempts = 0;
+            document.getElementById('question-count').innerText = `${currentQuestion + 1}/${quizData.length}`;
+            
+            const progress = ((currentQuestion) / quizData.length) * 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
+
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+            
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = "option-btn w-full text-right p-4 rounded-xl border border-gray-600 bg-gray-800/50 hover:border-blue-500 flex items-center gap-4 group";
+                btn.innerHTML = `
+                    <span class="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center group-hover:bg-blue-600 transition-colors">${index + 1}</span>
+                    <span class="text-lg">${opt}</span>
+                `;
+                btn.onclick = () => checkAnswer(index);
+                optionsContainer.appendChild(btn);
+            });
+        }
+        function checkAnswer(selected) {
+            const correct = quizData[currentQuestion].correct;
+            const feedback = document.getElementById('feedback');
+            feedback.classList.remove('hidden');
+
+            const buttons = document.getElementsByClassName('option-btn');
+
+            // If the selected answer is correct
+            if (selected === correct) {
+                if (attempts === 0) {
+                    // Correct on first attempt: full mark
+                    score += 10;
+                    feedback.innerText = "أحسنت! إجابة صحيحة 🌟";
+                    feedback.className = "mt-6 text-center h-8 font-bold text-lg text-green-400";
+                } else {
+                    // Correct on second attempt: half mark
+                    score += 5;
+                    feedback.innerText = "إجابة صحيحة — نصف العلامة ✅ (+5 نقاط)";
+                    feedback.className = "mt-6 text-center h-8 font-bold text-lg text-yellow-300";
+                }
+                document.getElementById('score').innerText = score;
+                // Highlight correct
+                buttons[correct].classList.add('bg-green-600/30', 'border-green-500');
+
+                // disable all to prevent further clicks
+                Array.from(buttons).forEach(btn => btn.disabled = true);
+
+                // After showing feedback, move to next question
+                setTimeout(() => {
+                    feedback.classList.add('hidden');
+                    currentQuestion++;
+                    if (currentQuestion < quizData.length) {
+                        loadQuestion();
+                    } else {
+                        showResults();
+                    }
+                }, 1500);
+
+            } else {
+                // Answer is incorrect
+                if (attempts === 0) {
+                    // First incorrect attempt: allow a second attempt
+                    attempts = 1;
+                    feedback.innerText = "خاطئ — لديك محاولة ثانية. حاول مرة أخرى.";
+                    feedback.className = "mt-6 text-center h-8 font-bold text-lg text-red-400";
+                    // Mark this button as incorrect and disable it so user can't pick same wrong answer
+                    buttons[selected].classList.add('bg-red-600/30', 'border-red-500');
+                    buttons[selected].disabled = true;
+                    // Keep other buttons enabled for the second attempt
+                } else {
+                    // Second incorrect attempt: show correct answer and skip question
+                    feedback.innerText = "للأسف، الإجابة خاطئة. الإجابة الصحيحة معلمة أدناه.";
+                    feedback.className = "mt-6 text-center h-8 font-bold text-lg text-red-400";
+                    // highlight selected as wrong and correct answer
+                    buttons[selected].classList.add('bg-red-600/30', 'border-red-500');
+                    buttons[correct].classList.add('bg-green-600/30', 'border-green-500');
+                    // disable all
+                    Array.from(buttons).forEach(btn => btn.disabled = true);
+
+                    setTimeout(() => {
+                        feedback.classList.add('hidden');
+                        currentQuestion++;
+                        if (currentQuestion < quizData.length) {
+                            loadQuestion();
+                        } else {
+                            showResults();
+                        }
+                    }, 1500);
+                }
+            }
+        }
+
+        function showResults() {
+            document.getElementById('game-container').classList.add('hidden');
+            document.getElementById('results-screen').classList.remove('hidden');
+            document.getElementById('final-score').innerText = score + " نقطة";
+            
+            let evaluation = "";
+            if (score >= 90) evaluation = "أنت مخرج محترف! لديك معرفة تقنية وفنية مذهلة.";
+            else if (score >= 70) evaluation = "رائع! مستواك جيد جداً، قليل من الممارسة وتصبح خبيراً.";
+            else if (score >= 50) evaluation = "جيد، لكنك تحتاج لمراجعة بعض المفاهيم التقنية.";
+            else evaluation = "يبدو أنك في بداية الطريق، راجع المنهج وحاول مرة أخرى.";
+
+            document.getElementById('evaluation-text').innerText = evaluation;
+
+            // Career ranking calculation
+            function calculateCareerRank(s) {
+                // Ranks from lowest to highest, ending with "Stream Legend"
+                // These thresholds are adjustable. Max possible score in this quiz = 100.
+                if (s >= 90) return {rank: 'Stream Legend', level: 6, note: 'تحكم كامل بالمخرجات والمهارات.'};
+                if (s >= 80) return {rank: 'Prodigy', level: 5, note: 'مستوى احترافي متقدم.'};
+                if (s >= 60) return {rank: 'Director', level: 4, note: 'مخرج متمرس قادر على قيادة الإنتاج.'};
+                if (s >= 40) return {rank: 'Producer', level: 3, note: 'فهم جيد للعملية الإنتاجية.'};
+                if (s >= 20) return {rank: 'Apprentice', level: 2, note: 'تحتاج لمزيد من التدريب والتجربة.'};
+                return {rank: 'Trainee', level: 1, note: 'بداية الطريق؛ تابع التعلم والممارسة.'};
+            }
+
+            const career = calculateCareerRank(score);
+            const careerEl = document.getElementById('career-rank');
+            careerEl.innerText = `رتبتك: ${career.rank} — ${career.note}`;
+
+            // After showing results, prepare leaderboard state using shared leaderboard helper
+            window.submitScoreFromResults = function() {
+                const nameInput = document.getElementById('player-name');
+                const rawName = (nameInput && nameInput.value) ? nameInput.value.trim() : '';
+                const playerName = rawName || 'مشارك مجهول';
+
+                const btn = document.getElementById('submit-score-btn');
+                btn.disabled = true;
+                const prevText = btn.innerText;
+                btn.innerText = 'جارٍ النشر...';
+
+                if (window.leaderboard && typeof window.leaderboard.submitScore === 'function') {
+                    window.leaderboard.submitScore(playerName, score, career.rank).then(() => {
+                        btn.innerText = 'تم النشر ✓';
+                        setTimeout(() => { btn.innerText = prevText; btn.disabled = false; }, 1500);
+                        // refresh leaderboard view
+                        window.leaderboard.renderTo('leaderboard-list', 10);
+                    }).catch(err => {
+                        console.error('Failed to submit to leaderboard', err);
+                        btn.innerText = 'فشل النشر';
+                        setTimeout(() => { btn.innerText = prevText; btn.disabled = false; }, 2000);
+                        // still try to refresh from local/remote
+                        if (window.leaderboard && typeof window.leaderboard.renderTo === 'function') window.leaderboard.renderTo('leaderboard-list', 10);
+                    });
+                } else {
+                    // No leaderboard helper, just refresh local view
+                    if (window.leaderboard && typeof window.leaderboard.renderTo === 'function') window.leaderboard.renderTo('leaderboard-list', 10);
+                    btn.innerText = 'تم الحفظ محلياً';
+                    setTimeout(() => { btn.innerText = prevText; btn.disabled = false; }, 1200);
+                }
+            };
+        }
+    </script>
+    <!-- Optional: Supabase configuration (uncomment and fill) -->
+    <script>
+        // To use Supabase set these values before loading leaderboard.js
+        window.SUPABASE_URL = 'https://xmobyzmaoxkscmrblceq.supabase.co';
+        window.SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhtb2J5em1hb3hrc2NtcmJsY2VxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcwMjk3ODAsImV4cCI6MjA4MjYwNTc4MH0.wEUs_bjRaDR32ISQcrt7qAnYXX-8rmdWwpo3LRnhcAc';
+    </script>
+
+    <!-- Firebase SDK (compat) and leaderboard integration (Firestore unused if Supabase is configured) -->
+    <!-- Replace firebaseConfig below in html5/data/js/leaderboard.js with your project's config or set it here as window.FIREBASE_CONFIG -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script>window.LEADERBOARD_AUTO_DEMO = false;</script>
+    <script src="html5/data/js/leaderboard.js"></script>
+    <script>
+        // Try to load questions from Supabase (if configured). This will replace quizData when rows exist.
+        (function(){
+            try {
+                if (window.leaderboard && typeof window.leaderboard.ready.then === 'function') {
+                    window.leaderboard.ready.then(() => {
+                        if (typeof window.leaderboard.fetchQuestions === 'function') {
+                            window.leaderboard.fetchQuestions().then(rows => {
+                                if (rows && rows.length > 0) {
+                                    // Map Supabase rows to the quizData shape used by the game
+                                    quizData = rows.map(r => ({
+                                        question: r.question || '',
+                                        options: Array.isArray(r.options) ? r.options : (r.options ? JSON.parse(r.options) : []),
+                                        correct: (typeof r.correct === 'number') ? r.correct : parseInt(r.correct, 10) || 0,
+                                        hint: r.hint || ''
+                                    }));
+                                    console.log('Quiz: loaded', quizData.length, 'questions from Supabase');
+                                    const status = document.getElementById('quiz-status');
+                                    if (status) status.innerText = `تم تحميل ${quizData.length} سؤالاً من الخادم`;
+                                } else {
+                                    console.log('Quiz: no questions found in Supabase, using local quizData fallback');
+                                    const status = document.getElementById('quiz-status');
+                                    if (status) status.innerText = 'لا توجد أسئلة على الخادم — سيتم استخدام الأسئلة المحلية';
+                                }
+                            }).catch(err => {
+                                console.error('Quiz: failed to fetch questions from Supabase', err);
+                                const status = document.getElementById('quiz-status');
+                                if (status) status.innerText = 'فشل جلب الأسئلة من الخادم — سيتم استخدام الأسئلة المحلية';
+                            }).finally(() => {
+                                // enable start button regardless of success so user can play
+                                const startBtn = document.getElementById('start-btn');
+                                if (startBtn) { startBtn.disabled = false; startBtn.classList.remove('bg-blue-600/60'); startBtn.classList.add('bg-blue-600','hover:bg-blue-700'); }
+                            });
+                        }
+                    }).catch(err => console.error('leaderboard.ready rejected', err));
+                }
+            } catch (e) { console.error('Quiz load error', e); }
+        })();
+    </script>
+</body>
+</html>

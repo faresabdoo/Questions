@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>لوحة إدارة الأسئلة - Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <style>body{font-family:'Cairo',sans-serif;background:#0f172a;color:#fff}.card{background:rgba(30,41,59,.85);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.06)}</style>
+</head>
+<body class="p-6">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-2xl font-bold mb-4">لوحة إدارة الأسئلة</h1>
+
+        <p class="text-sm text-gray-300 mb-4">هذه الصفحة تتيح إضافة وتعديل وحذف الأسئلة المخزنة في Supabase. تأكد من تهيئة <code>window.SUPABASE_URL</code> و <code>window.SUPABASE_KEY</code> قبل تحميل السكربت أدناه.</p>
+
+        <div id="status" class="mb-4 text-sm text-yellow-300"></div>
+
+        <div class="card p-4 mb-6">
+            <h2 class="font-semibold mb-2">قائمة الأسئلة</h2>
+            <div id="questions-list" class="space-y-3 text-sm"></div>
+        </div>
+
+        <div class="card p-4">
+            <h2 class="font-semibold mb-2">إضافة سؤال جديد / تعديل</h2>
+            <form id="question-form" class="space-y-3">
+                <input id="q-id" type="hidden" />
+                <div>
+                    <label class="block text-sm text-gray-300">نص السؤال</label>
+                    <textarea id="q-text" class="w-full p-2 rounded text-black" rows="2"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-300">الخيارات (واحد لكل سطر)</label>
+                    <textarea id="q-options" class="w-full p-2 rounded text-black" rows="4" placeholder="ضع كل خيار في سطر منفصل"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-300">رقم الإجابة الصحيحة (بدءاً من 1)</label>
+                    <input id="q-correct" type="number" class="p-2 rounded text-black w-32" min="1" />
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-300">تلميح (اختياري)</label>
+                    <input id="q-hint" class="w-full p-2 rounded text-black" />
+                </div>
+                <div class="flex gap-2">
+                    <button id="save-btn" class="bg-blue-600 py-2 px-4 rounded">حفظ السؤال</button>
+                    <button id="clear-btn" type="button" class="bg-gray-600 py-2 px-4 rounded">مسح الحقول</button>
+                </div>
+                <div id="form-msg" class="text-sm text-yellow-200"></div>
+            </form>
+        </div>
+
+        <div class="mt-6 text-sm text-gray-400">ملاحظات: Admin عبر المتصفح يتطلب مفتاح Supabase العام/المنشئ؛ لأمان أفضل ضع هذه الواجهة خلف مصادقة أو نفّذ CRUD بواسطة API آمن.</div>
+    </div>
+
+    <!-- Supabase config: set these BEFORE leaderboard.js to let it auto-init -->
+    <script>
+        window.SUPABASE_URL = 'https://xmobyzmaoxkscmrblceq.supabase.co';
+        window.SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhtb2J5em1hb3hrc2NtcmJsY2VxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcwMjk3ODAsImV4cCI6MjA4MjYwNTc4MH0.wEUs_bjRaDR32ISQcrt7qAnYXX-8rmdWwpo3LRnhcAc';
+    </script>
+
+    <script src="html5/data/js/leaderboard.js"></script>
+    <script src="html5/data/js/admin.js"></script>
+</body>
+</html>
