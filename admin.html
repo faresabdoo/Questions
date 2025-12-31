@@ -49,6 +49,19 @@
             </form>
         </div>
 
+        <div class="card p-4 mt-6">
+            <h2 class="font-semibold mb-2">استيراد مجموعة أسئلة (جماعي)</h2>
+            <p class="text-sm text-gray-300 mb-2">يمكنك لصق مصفوفة JSON من الأسئلة أو إدخال كل سؤال في سطر بصيغة JSON. كل عنصر يجب أن يحتوي على الحقول: <code>question</code>, <code>options</code> (مصفوفة), <code>correct</code> (مؤشر 0-based أو 1-based), <code>hint</code> (اختياري).</p>
+            <textarea id="bulk-input" class="w-full p-2 rounded text-black" rows="8" placeholder='مثال: [{"question":"...","options":["a","b","c","d"],"correct":1,"hint":"..."}, ...]'></textarea>
+            <div class="flex gap-2 mt-3">
+                <button id="preview-bulk-btn" class="bg-indigo-600 py-2 px-4 rounded">معاينة</button>
+                <button id="import-bulk-btn" class="bg-green-600 py-2 px-4 rounded">استيراد الأسئلة</button>
+                <button id="clear-bulk-btn" type="button" class="bg-gray-600 py-2 px-4 rounded">مسح</button>
+            </div>
+            <div id="bulk-status" class="text-sm text-yellow-200 mt-2"></div>
+            <div id="bulk-preview" class="mt-3 space-y-2 text-sm"></div>
+        </div>
+
         <div class="mt-6 text-sm text-gray-400">ملاحظات: Admin عبر المتصفح يتطلب مفتاح Supabase العام/المنشئ؛ لأمان أفضل ضع هذه الواجهة خلف مصادقة أو نفّذ CRUD بواسطة API آمن.</div>
     </div>
 
