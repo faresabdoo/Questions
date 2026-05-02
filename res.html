@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>مفاعل نبضة الفارس | The Knight's Pulse Reactor</title>
+    
+    <!-- Fonts: Tajawal for Arabic, Orbitron for Cyberpunk numbers/English -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+    
+    <!-- HTML2Canvas Library for Sticker Generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+        :root {
+            /* PRD Colors */
+            --neon-cyan: #00FFFF;
+            --electric-purple: #B026FF;
+            --dark-navy: #0A0F24;
+            --white: #FFFFFF;
+            
+            /* Backgrounds */
+            --bg-obsidian: #050810;
+            --glass-card: rgba(10, 15, 36, 0.6);
+            --glass-border: rgba(0, 255, 255, 0.15);
+            
+            /* Text */
+            --text-main: #E6EDF3;
+            --text-dim: #8B949E;
+            
+            /* Gamification Tiers */
+            --tier-legendary: var(--electric-purple);
+            --tier-active: var(--neon-cyan);
+            --tier-charging: #F39C12;
+
+            --font-ar: 'Tajawal', sans-serif;
+            --font-en: 'Orbitron', sans-serif;
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ─── Base Styles ─────────────────────────────────────────── */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: var(--bg-obsidian);
+            color: var(--text-main);
+            font-family: var(--font-ar);
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(176, 38, 255, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(0, 255, 255, 0.05) 0%, transparent 50%),
+                linear-gradient(rgba(0, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 50px 50px, 50px 50px;
+        }
+
+        /* ─── Header & Global Core ────────────────────────────────── */
+        header {
+            padding: 50px 20px 20px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .uni-badge {
+            display: inline-block;
+            background: rgba(176, 38, 255, 0.1);
+            border: 1px solid rgba(176, 38, 255, 0.3);
+            color: var(--electric-purple);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            box-shadow: 0 0 10px rgba(176, 38, 255, 0.2);
+        }
+
+        .main-title {
+            font-size: 3rem;
+            font-weight: 900;
+            letter-spacing: 1px;
+            background: linear-gradient(180deg, var(--white) 0%, var(--neon-cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 20px rgba(0, 255, 255, 0.4));
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: var(--text-dim);
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+
+        .batch-core {
+            max-width: 650px;
+            margin: 0 auto;
+            background: var(--glass-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 20px 30px;
+            backdrop-filter: blur(12px);
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+          .batch-core2 {
+            max-width: 650px;
+            margin: 0 auto;
+            background: var(--glass-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 20px 30px;
+            backdrop-filter: blur(12px);
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+             justify-content: center;
+        }
+
+        .core-meter {
+            width: 90px; height: 90px;
+            border: 3px solid rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            position: relative;
+            background: radial-gradient(circle, rgba(0,255,255,0.1), transparent);
+        }
+        .core-meter::after {
+            content: '';
+            position: absolute; inset: -6px;
+            border: 2px dashed var(--neon-cyan);
+            border-radius: 50%;
+            animation: rotate 8s linear infinite;
+        }
+        @keyframes rotate { to { transform: rotate(360deg); } }
+
+        .core-value { 
+            font-family: var(--font-en); 
+            font-size: 1.6rem; 
+            color: var(--neon-cyan); 
+            font-weight: 900; 
+            text-shadow: 0 0 15px var(--neon-cyan);
+        }
+
+        /* ─── Energy Grid ─────────────────────────────────────────── */
+        .energy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 20px auto 100px;
+        }
+
+        /* ─── Glitch ID Card (Energy Cell) ────────────────────────── */
+        .energy-cell {
+            background: var(--glass-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+            backdrop-filter: blur(15px);
+            opacity: 0; transform: translateY(40px);
+            display: flex;
+            flex-direction: column;
+        }
+        .energy-cell.active { opacity: 1; transform: translateY(0); }
+
+        .energy-cell:hover {
+            transform: translateY(-10px) scale(1.02);
+            z-index: 10;
+        }
+
+        /* Gamification Tiers Styles */
+        .tier-legendary {
+            --glow-color: var(--electric-purple);
+            border-color: rgba(176, 38, 255, 0.5);
+            animation: glitch-border 3s infinite;
+        }
+        .tier-legendary::before {
+            content: 'LEGENDARY CORE';
+            position: absolute; top: 0; right: 0;
+            background: var(--electric-purple); color: #fff;
+            font-family: var(--font-en); font-size: 0.6rem; font-weight: 900;
+            padding: 3px 15px; border-bottom-left-radius: 10px;
+            box-shadow: 0 0 15px var(--electric-purple);
+        }
+
+        .tier-active {
+            --glow-color: var(--neon-cyan);
+        }
+        .tier-active::before {
+            content: 'ACTIVE REACTOR';
+            position: absolute; top: 0; right: 0;
+            background: rgba(0, 255, 255, 0.2); color: var(--neon-cyan);
+            font-family: var(--font-en); font-size: 0.6rem; font-weight: 900;
+            padding: 3px 15px; border-bottom-left-radius: 10px;
+        }
+
+        .tier-charging {
+            --glow-color: var(--tier-charging);
+            opacity: 0.9;
+        }
+        .tier-charging::before {
+            content: 'CHARGING MODE';
+            position: absolute; top: 0; right: 0;
+            background: rgba(243, 156, 18, 0.1); color: var(--tier-charging);
+            font-family: var(--font-en); font-size: 0.6rem; font-weight: 900;
+            padding: 3px 15px; border-bottom-left-radius: 10px;
+        }
+
+        .energy-cell:hover { box-shadow: 0 0 30px rgba(var(--glow-color), 0.3); }
+
+        @keyframes glitch-border {
+            0%, 100% { box-shadow: 0 0 10px rgba(176, 38, 255, 0.2); }
+            50% { box-shadow: 0 0 25px rgba(176, 38, 255, 0.6), inset 0 0 15px rgba(176, 38, 255, 0.2); }
+        }
+
+        .cell-header {
+            display: flex; justify-content: space-between; align-items: flex-start;
+            margin-bottom: 25px; margin-top: 10px;
+        }
+        .student-name { font-size: 1.5rem; font-weight: 900; color: #fff; }
+        
+        .rating-badge {
+            font-size: 0.8rem; font-weight: 800;
+            padding: 5px 15px; border-radius: 12px;
+            background: rgba(255,255,255,0.05);
+            color: var(--glow-color);
+            border: 1px solid var(--glow-color);
+            box-shadow: 0 0 10px rgba(var(--glow-color), 0.2);
+        }
+
+        /* Stats Row */
+        .stats-row {
+            display: flex; gap: 20px; align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed rgba(255,255,255,0.1);
+        }
+        
+        .stat-box { flex: 1; }
+        .stat-label { font-size: 0.75rem; color: var(--text-dim); margin-bottom: 5px; }
+        .stat-value { font-family: var(--font-en); font-size: 1.6rem; font-weight: 900; color: #fff; }
+        .stat-value.highlight { color: var(--glow-color); text-shadow: 0 0 10px rgba(var(--glow-color), 0.5); }
+
+        /* Progress Bar */
+        .energy-track {
+            width: 100%; height: 8px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 25px;
+        }
+        .energy-fill {
+            height: 100%;
+            background: var(--glow-color);
+            box-shadow: 0 0 15px var(--glow-color);
+            transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 0;
+            position: relative;
+        }
+        .energy-fill::after {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+            animation: scanline 2s infinite;
+        }
+        @keyframes scanline {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* ─── Buttons ─────────────────────────────────────────────── */
+        .btn-generate {
+            width: 100%;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--glow-color);
+            color: var(--white);
+            padding: 12px;
+            border-radius: 10px;
+            font-family: var(--font-ar);
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .btn-generate:hover {
+            background: var(--glow-color);
+            color: var(--dark-navy);
+            box-shadow: 0 0 20px var(--glow-color);
+        }
+
+        /* ─── Modal (Sticker Actions) ─────────────────────────────── */
+        .modal {
+            position: fixed; inset: 0; z-index: 2000;
+            background: rgba(5, 8, 16, 0.95);
+            backdrop-filter: blur(10px);
+            display: none; align-items: center; justify-content: center;
+            padding: 20px;
+        }
+        .modal.show { display: flex; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .modal-content {
+            background: var(--dark-navy);
+            width: 100%; max-width: 450px;
+            border: 1px solid var(--neon-cyan);
+            border-radius: 24px;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+        .close-modal {
+            position: absolute; top: 20px; right: 20px;
+            background: rgba(255,255,255,0.1); border: none; color: #fff; 
+            width: 30px; height: 30px; border-radius: 50%;
+            cursor: pointer; transition: 0.3s;
+        }
+        .close-modal:hover { background: var(--neon-cyan); color: #000; }
+
+        .btn-whatsapp {
+            display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+            background: #25D366; color: #fff;
+            text-decoration: none; padding: 15px 30px;
+            border-radius: 12px; font-weight: 800; font-size: 1.1rem;
+            margin-top: 20px; transition: 0.3s;
+            box-shadow: 0 10px 20px rgba(37, 211, 102, 0.3);
+        }
+        .btn-whatsapp:hover { transform: translateY(-3px); box-shadow: 0 15px 25px rgba(37, 211, 102, 0.4); }
+
+        /* ─── Hidden Sticker Template for html2canvas ─────────────── */
+        #sticker-render-area {
+            position: fixed; top: -9999px; left: -9999px;
+            width: 1080px; height: 1080px; /* Story/Sticker square size */
+            background-color: var(--dark-navy);
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(176, 38, 255, 0.15) 0%, transparent 60%),
+                linear-gradient(rgba(0, 255, 255, 0.05) 2px, transparent 2px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.05) 2px, transparent 2px);
+            background-size: 100% 100%, 80px 80px, 80px 80px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: #fff; font-family: 'Tajawal', sans-serif;
+        }
+        
+        .sticker-frame {
+            width: 85%; height: 85%;
+            border: 4px solid var(--neon-cyan);
+            border-radius: 40px;
+            position: relative;
+            padding: 80px 60px;
+            display: flex; flex-direction: column; justify-content: space-between;
+            background: rgba(10, 15, 36, 0.8);
+            box-shadow: inset 0 0 100px rgba(0, 255, 255, 0.2), 0 0 50px rgba(0, 255, 255, 0.3);
+        }
+
+        .sticker-frame::before {
+            content: 'ED-TECH QENA';
+            position: absolute; top: -25px; left: 50%; transform: translateX(-50%);
+            background: var(--dark-navy); color: var(--neon-cyan);
+            padding: 0 30px; font-family: 'Orbitron', sans-serif; font-size: 1.5rem; font-weight: 900;
+            border: 2px solid var(--neon-cyan); border-radius: 20px;
+        }
+
+        .s-header { text-align: center; }
+        .s-uni { color: var(--electric-purple); font-size: 2.2rem; font-weight: 900; margin-bottom: 10px; }
+        .s-title { color: var(--text-main); font-size: 1.8rem; font-weight: 700; margin-bottom: 50px; }
+        
+        .s-body { text-align: center; flex: 1; display: flex; flex-direction: column; justify-content: center; }
+        .s-name { font-size: 4.5rem; font-weight: 900; color: #fff; margin-bottom: 20px; text-shadow: 0 0 20px rgba(255,255,255,0.3); }
+        .s-rating { 
+            display: inline-block; background: var(--electric-purple); color: #fff;
+            padding: 15px 40px; border-radius: 25px; font-size: 2.5rem; font-weight: 900;
+            margin-bottom: 50px;
+        }
+        
+        .s-score-box { display: flex; justify-content: center; gap: 50px; }
+        .s-score-item { text-align: center; }
+        .s-score-label { color: var(--text-dim); font-size: 1.8rem; margin-bottom: 10px; }
+        .s-score-val { font-family: 'Orbitron', sans-serif; font-size: 5rem; font-weight: 900; color: var(--neon-cyan); }
+
+        .s-footer { text-align: center; border-top: 2px dashed rgba(255,255,255,0.2); padding-top: 30px; }
+        .s-footer-text { font-family: 'Orbitron', sans-serif; font-size: 1.5rem; color: var(--text-dim); letter-spacing: 5px; }
+
+        /* ─── Loading ─────────────────────────────────────────────── */
+        #loading-screen {
+            position: fixed; inset: 0; background: var(--bg-obsidian);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 3000; transition: opacity 0.5s;
+        }
+        .loader-ring {
+            width: 80px; height: 80px;
+            border: 4px solid rgba(176, 38, 255, 0.2);
+            border-top: 4px solid var(--electric-purple);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @media (max-width: 768px) {
+            .main-title { font-size: 2rem; }
+            .batch-core { flex-direction: column; text-align: center; }
+            .energy-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Startup Loader -->
+    <div id="loading-screen">
+        <div class="loader-ring"></div>
+        <p style="margin-top: 25px; color: var(--electric-purple); font-family: var(--font-en); letter-spacing: 3px; font-weight: 700;">INITIALIZING REACTOR...</p>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="uni-badge">جامعة قنا — قسم تكنولوجيا التعليم</div>
+        <h1 class="main-title">مفاعل  تربية نوعية</h1>
+        <p class="subtitle">نظام الهوية الرقمية وتقييم الأداء التفاعلي للطلاب</p>
+        
+        <div class="batch-core">
+            <div class="core-meter">
+                <div class="core-value" id="batch-avg">%0</div>
+            </div>
+            <div style="text-align: right; flex: 1;">
+                <h3 style="font-size: 1.3rem; color: #fff; margin-bottom: 5px;">مفاعل الأداء الجماعي</h3>
+                <p style="font-size: 0.95rem; color: var(--text-dim);">مؤشر طاقة الدفعة الحالية بناءً على نتائج الاختبارات المدمجة.</p>
+            </div>
+            <div style="text-align: center; border-right: 1px solid rgba(255,255,255,0.1); padding-right: 25px;">
+                <div style="font-family: var(--font-en); font-size: 1.5rem; color: #fff; font-weight: 700;" id="active-sources">0</div>
+                <div style="font-size: 0.8rem; color: var(--text-dim);">طالب مُسجل</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Leaderboard Grid -->
+    <main class="energy-grid" id="main-grid">
+        <!-- Cells injected via JS -->
+    </main>
+
+    <!-- Modal for Action Success -->
+    <div class="modal" id="action-modal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal()">×</button>
+            <div id="modal-status-icon" style="font-size: 4rem; margin-bottom: 10px;">✨</div>
+            <h2 id="modal-status-title" style="color: #fff; margin-bottom: 15px;">جاهز للمشاركة!</h2>
+            <p id="modal-status-desc" style="color: var(--text-dim); margin-bottom: 25px; line-height: 1.6;">
+                تم توليد بطاقتك الرقمية. يمكنك الآن إرسالها كصورة مباشرة إلى أصدقائك أو تحميلها.
+            </p>
+            <div id="modal-actions-area" style="display: flex; flex-direction: column; gap: 10px;">
+                <!-- Buttons will be handled by JS for direct sharing vs manual -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden Sticker Render Area (Used by html2canvas) -->
+    <div id="sticker-render-area">
+        <div class="sticker-frame">
+            <div class="s-header">
+                <div class="s-uni">جامعة قنا</div>
+                <div class="s-title">قسم تكنولوجيا التعليم | The Knight's Pulse</div>
+            </div>
+            <div class="s-body">
+                <div class="s-name" id="s-name">Student Name</div>
+                <div><div class="s-rating" id="s-rating">التقييم</div></div>
+                <div class="s-score-box">
+                    <div class="s-score-item">
+                        <div class="s-score-label">النسبة المئوية</div>
+                        <div class="s-score-val" id="s-percent">0%</div>
+                    </div>
+                    <div class="s-score-item">
+                        <div class="s-score-label">الدرجة</div>
+                        <div class="s-score-val" id="s-score">0/0</div>
+                    </div>
+                </div>
+            </div>
+            <div class="s-footer">
+                <div class="s-footer-text">GENERATED BY FARES WEB CODE SYSTEM</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Google Sheets Integration
+        const SHEET_ID = '1W5AYss2OG2vR9mjnj7rC9tSD0FLJZOI8E2eyqYS1SsI';
+        const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv`;
+
+        async function fetchEnergyData() {
+            try {
+                const response = await fetch(CSV_URL);
+                const data = await response.text();
+                processData(data);
+            } catch (err) {
+                console.error("Fetch Error:", err);
+                document.getElementById('loading-screen').innerHTML = '<p style="color:red; font-size:1.2rem;">فشل الاتصال بالمفاعل المركزي.</p>';
+            }
+        }
+
+        function processData(csv) {
+            const lines = csv.split('\n');
+            const students = [];
+            let totalPercentage = 0;
+
+            for(let i = 1; i < lines.length; i++) {
+                const cols = lines[i].split(',');
+                if(cols.length < 4) continue;
+
+                const name = cols[1]?.trim();
+                const scoreStr = cols[2]?.trim();
+                const percentStr = cols[3]?.trim();
+                const rating = cols[4]?.trim() || "جيد";
+
+                if(name && scoreStr) {
+                    const scoreNum = parseFloat(scoreStr.split('/')[0]) || 0;
+                    const percentNum = parseFloat(percentStr.replace('%', '')) || 0;
+                    
+                    // Determine Gamification Tier
+                    let tier = 'charging';
+                    if (percentNum >= 90) tier = 'legendary';
+                    else if (percentNum >= 75) tier = 'active';
+
+                    students.push({
+                        name, scoreStr, percentNum, percentStr, rating, scoreNum, tier
+                    });
+                    totalPercentage += percentNum;
+                }
+            }
+
+            // Sort: Highest score first
+            students.sort((a, b) => b.scoreNum - a.scoreNum);
+            
+            const avg = students.length ? Math.round(totalPercentage / students.length) : 0;
+            document.getElementById('batch-avg').textContent = avg + '%';
+            document.getElementById('active-sources').textContent = students.length;
+
+            renderGrid(students);
+        }
+
+        function renderGrid(students) {
+            const grid = document.getElementById('main-grid');
+            grid.innerHTML = '';
+
+            students.forEach((s, idx) => {
+                const cell = document.createElement('div');
+                cell.className = `energy-cell tier-${s.tier}`;
+                
+                // SVG Icon for button
+                const btnIcon = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>`;
+
+                cell.innerHTML = `
+                    <div class="cell-header">
+                        <div class="student-name">${s.name}</div>
+                        <div class="rating-badge">${s.rating}</div>
+                    </div>
+                    
+                    <div class="stats-row">
+                        <div class="stat-box">
+                            <div class="stat-label">نقاط الطاقة</div>
+                            <div class="stat-value highlight">${s.scoreStr}</div>
+                        </div>
+                        <div class="stat-box" style="text-align: left;">
+                            <div class="stat-label">معدل الشحن</div>
+                            <div class="stat-value">${s.percentStr}</div>
+                        </div>
+                    </div>
+
+                    <div class="energy-track">
+                        <div class="energy-fill" style="width: 0%" id="fill-${idx}"></div>
+                    </div>
+
+                    <button class="btn-generate" onclick="generateSticker('${s.name}', '${s.scoreStr}', '${s.percentStr}', '${s.rating}', '${s.tier}')">
+                        ${btnIcon} استخراج ومشاركة البطاقة
+                    </button>
+                `;
+
+                grid.appendChild(cell);
+
+                // Staggered Entry Animation & Progress Bar Fill
+                setTimeout(() => {
+                    cell.classList.add('active');
+                    document.getElementById(`fill-${idx}`).style.width = s.percentNum + '%';
+                }, idx * 120);
+            });
+
+            // Hide Initial Loader
+            setTimeout(() => {
+                const ls = document.getElementById('loading-screen');
+                ls.style.opacity = '0';
+                setTimeout(() => ls.style.display = 'none', 500);
+            }, 800);
+        }
+
+        // --- Sticker Engine Logic ---
+        async function generateSticker(name, score, percent, rating, tier) {
+            // 1. Populate the hidden template
+            document.getElementById('s-name').textContent = name;
+            document.getElementById('s-score').textContent = score;
+            document.getElementById('s-percent').textContent = percent;
+            document.getElementById('s-rating').textContent = rating;
+
+            // Adjust sticker colors based on tier
+            const frame = document.querySelector('.sticker-frame');
+            const ratingBadge = document.getElementById('s-rating');
+            
+            if(tier === 'legendary') {
+                frame.style.borderColor = 'var(--electric-purple)';
+                frame.style.boxShadow = 'inset 0 0 100px rgba(176,38,255, 0.3), 0 0 50px rgba(176,38,255, 0.4)';
+                ratingBadge.style.background = 'var(--electric-purple)';
+            } else if(tier === 'charging') {
+                frame.style.borderColor = '#F39C12';
+                frame.style.boxShadow = 'inset 0 0 100px rgba(243,156,18, 0.2), 0 0 50px rgba(243,156,18, 0.3)';
+                ratingBadge.style.background = '#F39C12';
+            } else {
+                frame.style.borderColor = 'var(--neon-cyan)';
+                frame.style.boxShadow = 'inset 0 0 100px rgba(0,255,255, 0.2), 0 0 50px rgba(0,255,255, 0.3)';
+                ratingBadge.style.background = 'var(--neon-cyan)';
+                ratingBadge.style.color = '#000';
+            }
+
+            // 2. Render using html2canvas
+            const renderArea = document.getElementById('sticker-render-area');
+            
+            try {
+                const canvas = await html2canvas(renderArea, {
+                    scale: 1.5,
+                    backgroundColor: '#050810',
+                    logging: false
+                });
+
+                // 3. Logic for Direct WhatsApp/Image Sharing
+                const fileName = `Knight-Pulse-${name.replace(/\s+/g, '-')}.jpg`;
+                
+                // Convert Canvas to Blob for Web Share API
+                canvas.toBlob(async (blob) => {
+                    const file = new File([blob], fileName, { type: 'image/jpeg' });
+                    const actionsArea = document.getElementById('modal-actions-area');
+                    actionsArea.innerHTML = ''; // Clear old buttons
+
+                    // Case A: Browser supports Web Share API with Files (Mobile mostly)
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        const shareBtn = document.createElement('button');
+                        shareBtn.className = 'btn-whatsapp';
+                        shareBtn.innerHTML = 'إرسال الصورة مباشرة 📲';
+                        shareBtn.onclick = async () => {
+                            try {
+                                await navigator.share({
+                                    files: [file],
+                                    title: 'بطاقتي الرقمية',
+                                    text: 'شاهد بطاقتي الرقمية من مفاعل تكنولوجيا التعليم - جامعة قنا! 🚀'
+                                });
+                            } catch (err) { console.error("Share failed:", err); }
+                        };
+                        actionsArea.appendChild(shareBtn);
+                        
+                        document.getElementById('modal-status-desc').textContent = "رائع! يمكنك الآن إرسال الصورة مباشرة إلى واتساب أو أي تطبيق آخر بالضغط على الزر أدناه.";
+                    } 
+                    // Case B: Fallback for Desktop/Older Browsers
+                    else {
+                        const downloadBtn = document.createElement('button');
+                        downloadBtn.className = 'btn-whatsapp';
+                        downloadBtn.style.background = 'var(--neon-cyan)';
+                        downloadBtn.style.color = '#000';
+                        downloadBtn.innerHTML = 'تحميل الصورة كملف 💾';
+                        downloadBtn.onclick = () => {
+                            const link = document.createElement("a");
+                            link.download = fileName;
+                            link.href = canvas.toDataURL("image/jpeg", 0.9);
+                            link.click();
+                        };
+                        actionsArea.appendChild(downloadBtn);
+
+                        const waLink = document.createElement('a');
+                        waLink.href = `https://api.whatsapp.com/send?text=شاهد%20بطاقتي%20الرقمية%20من%20مفاعل%20تكنولوجيا%20التعليم!%20%F0%9F%9A%80`;
+                        waLink.target = "_blank";
+                        waLink.className = 'btn-whatsapp';
+                        waLink.innerHTML = 'فتح واتساب للمشاركة 📲';
+                        actionsArea.appendChild(waLink);
+
+                        document.getElementById('modal-status-desc').textContent = "عذراً، متصفحك لا يدعم الإرسال المباشر للصور. يرجى تحميل الصورة أولاً ثم مشاركتها يدوياً.";
+                    }
+
+                    // Show the modal
+                    document.getElementById('action-modal').classList.add('show');
+                }, 'image/jpeg', 0.9);
+
+            } catch(e) {
+                console.error("Error generating sticker: ", e);
+                alert("حدث خطأ أثناء توليد البطاقة.");
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('action-modal').classList.remove('show');
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('action-modal');
+            if (event.target == modal) closeModal();
+        }
+
+        window.onload = fetchEnergyData;
+    </script>
+    <a href="Learning_management_applications.html">
+        <div class="batch-core2">اختبار زووم الشامل</div> 
+        </div>
+</a>
+</body>
+</html>
