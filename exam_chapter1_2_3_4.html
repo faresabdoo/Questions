@@ -1,0 +1,2174 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام الإتقان للإدارة التعليمية</title>
+    <style>
+        /* --- STREAMING_CHUNK: تعريف المتغيرات اللونية الحديثة --- */
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --primary-light: #e0e7ff;
+            --secondary: #7c3aed;
+            --secondary-hover: #6d28d9;
+            --secondary-light: #f3e8ff;
+            --bg-dark: #0f172a;
+            --bg-light: #f8fafc;
+            --text-dark: #1e293b;
+            --text-light: #f1f5f9;
+            --success: #10b981;
+            --success-light: #ecfdf5;
+            --error: #ef4444;
+            --error-light: #fef2f2;
+            --border-color: #e2e8f0;
+        }
+
+        /* --- STREAMING_CHUNK: إعدادات الخطوط والملء الشامل للصفحة --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- STREAMING_CHUNK: واجهة الترحيب والتحكم الرئيسية --- */
+        .home-bg {
+            background: radial-gradient(circle at top right, #1e1b4b, #0f172a);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+        }
+
+        .home-container {
+            max-width: 1100px;
+            width: 100%;
+            text-align: center;
+            background: rgba(15, 23, 42, 0.7);
+            padding: 3rem 2rem;
+            border-radius: 1.5rem;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            backdrop-filter: blur(12px);
+        }
+
+        .home-icon {
+            background: rgba(99, 102, 241, 0.1);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .home-icon svg {
+            width: 40px;
+            height: 40px;
+            color: #818cf8;
+        }
+
+        .home-title {
+            font-size: 2.25rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, #c7d2fe, #f3e8ff, #e0e7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .home-desc {
+            color: #94a3b8;
+            font-size: 1.125rem;
+            max-width: 750px;
+            margin: 0 auto 3rem;
+        }
+
+        /* --- STREAMING_CHUNK: شبكة اختيار الفصول الأربعة للمادة --- */
+        .chapters-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .chapters-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .chapters-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .chapter-card {
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 1.25rem;
+            padding: 1.5rem;
+            text-align: right;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 280px;
+        }
+
+        .chapter-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(99, 102, 241, 0.5);
+            box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.15);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        /* --- STREAMING_CHUNK: ألوان تاغات تصنيف الفصول الدراسية --- */
+        .tag-chapter-1 {
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: #818cf8;
+            background: rgba(129, 140, 248, 0.1);
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            border: 1px solid rgba(129, 140, 248, 0.2);
+        }
+
+        .tag-chapter-2 {
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: #c084fc;
+            background: rgba(192, 132, 252, 0.1);
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            border: 1px solid rgba(192, 132, 252, 0.2);
+        }
+
+        .tag-chapter-3 {
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: #f472b6;
+            background: rgba(244, 114, 182, 0.1);
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            border: 1px solid rgba(244, 114, 182, 0.2);
+        }
+
+        .tag-chapter-4 {
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: #2dd4bf;
+            background: rgba(45, 212, 191, 0.1);
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            border: 1px solid rgba(45, 212, 191, 0.2);
+        }
+
+        .card-count {
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+
+        .chapter-card h3 {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #f8fafc;
+            margin-bottom: 0.75rem;
+            transition: color 0.2s ease;
+        }
+
+        .chapter-card:hover h3 {
+            color: #a5b4fc;
+        }
+
+        .chapter-card p {
+            color: #94a3b8;
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .start-btn-text {
+            color: #818cf8;
+            font-weight: bold;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            margin-top: auto;
+        }
+
+        /* --- STREAMING_CHUNK: واجهة الاختبار والتفاعلات داخل الكويز --- */
+        .app-container {
+            max-width: 800px;
+            width: 100%;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .nav-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .back-btn {
+            background: white;
+            border: 1px solid var(--border-color);
+            color: #475569;
+            padding: 0.5rem 1rem;
+            font-weight: bold;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+        }
+
+        .back-btn:hover {
+            background: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        .chapter-indicator {
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 0.875rem;
+        }
+
+        .title-block {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .title-block h1 {
+            font-size: 1.75rem;
+            font-weight: 900;
+            color: #0f172a;
+        }
+
+        .level-name {
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 1.125rem;
+            margin-top: 0.25rem;
+        }
+
+        .progress-outer {
+            background-color: white;
+            border: 1px solid var(--border-color);
+            height: 12px;
+            border-radius: 9999px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 1rem;
+        }
+
+        .progress-inner {
+            background-color: var(--primary);
+            height: 100%;
+            width: 0%;
+            transition: width 0.4s ease-out;
+        }
+
+        .progress-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: #64748b;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+        }
+
+        /* كارت السؤال */
+        .question-card {
+            background: white;
+            border-radius: 1.25rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            border-top: 4px solid var(--primary);
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .question-tags {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .tag-type {
+            background: var(--primary-light);
+            color: var(--primary-hover);
+            font-size: 0.75rem;
+            font-weight: bold;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            border: 1px solid rgba(79, 70, 229, 0.1);
+        }
+
+        .tag-id {
+            color: #94a3b8;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .question-text {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #1e293b;
+            line-height: 1.7;
+            margin-bottom: 2rem;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .option-btn {
+            width: 100%;
+            text-align: right;
+            padding: 1rem;
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #334155;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            color: var(--primary-hover);
+        }
+
+        /* --- STREAMING_CHUNK: حالات الخيارات بعد الإجابة --- */
+        .option-btn.correct {
+            background-color: var(--success-light) !important;
+            border-color: var(--success) !important;
+            color: #065f46 !important;
+            font-weight: bold;
+        }
+
+        .option-btn.wrong {
+            background-color: var(--error-light) !important;
+            border-color: var(--error) !important;
+            color: #991b1b !important;
+        }
+
+        .option-btn.muted {
+            background-color: #f8fafc;
+            border-color: var(--border-color);
+            color: #94a3b8;
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* صندوق التغذية الراجعة (Feedback Block) */
+        .feedback-block {
+            background-color: white;
+            border-radius: 1.25rem;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-right: 8px solid;
+            display: none;
+            animation: fadeInUp 0.3s ease;
+        }
+
+        .feedback-block.correct {
+            background-color: var(--success-light);
+            border-right-color: var(--success);
+        }
+
+        .feedback-block.wrong {
+            background-color: var(--error-light);
+            border-right-color: var(--error);
+        }
+
+        .feedback-status {
+            font-size: 1.25rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+        }
+
+        .feedback-status.correct {
+            color: #047857;
+        }
+
+        .feedback-status.wrong {
+            color: #b91c1c;
+        }
+
+        .feedback-smart-notice {
+            color: #b91c1c;
+            font-weight: bold;
+            font-size: 0.875rem;
+            background: rgba(239, 68, 68, 0.1);
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+
+        .feedback-content {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+        }
+
+        .feedback-text {
+            font-size: 1rem;
+            color: #334155;
+            margin-bottom: 1rem;
+        }
+
+        .feedback-ref {
+            display: flex;
+            align-items: center;
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+
+        .ref-pill {
+            background: #e2e8f0;
+            color: #334155;
+            font-weight: bold;
+            padding: 0.15rem 0.5rem;
+            border-radius: 0.25rem;
+            margin-right: 0.5rem;
+        }
+
+        .continue-btn {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.125rem;
+            font-weight: bold;
+            color: white;
+            border: none;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: all 0.2s;
+            margin-top: 1rem;
+        }
+
+        .continue-btn.correct-btn {
+            background: var(--success);
+        }
+
+        .continue-btn.correct-btn:hover {
+            background: #059669;
+        }
+
+        .continue-btn.wrong-btn {
+            background: var(--error);
+        }
+
+        .continue-btn.wrong-btn:hover {
+            background: #dc2626;
+        }
+
+        /* --- STREAMING_CHUNK: واجهة التقرير النهائي وتحليل البيانات --- */
+        .report-card {
+            background: white;
+            border-radius: 1.25rem;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            border-top: 8px solid var(--primary);
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .report-header h2 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #0f172a;
+        }
+
+        .percent-circle {
+            font-size: 3.75rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+        }
+
+        .percent-circle.success {
+            color: var(--success);
+        }
+
+        .percent-circle.fail {
+            color: var(--error);
+        }
+
+        .stats-summary {
+            background-color: var(--bg-light);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            text-align: right;
+            margin-bottom: 1.5rem;
+        }
+
+        .stats-summary h3 {
+            font-size: 1.125rem;
+            color: var(--primary-hover);
+            margin-bottom: 0.75rem;
+            font-weight: bold;
+        }
+
+        .stats-summary ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .stats-summary li {
+            display: flex;
+            justify-content: space-between;
+            color: #334155;
+            font-size: 0.95rem;
+        }
+
+        .weak-points {
+            background-color: var(--error-light);
+            border: 1px solid #fee2e2;
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            text-align: right;
+            margin-bottom: 1.5rem;
+        }
+
+        .weak-points h3 {
+            font-size: 1.125rem;
+            color: #b91c1c;
+            margin-bottom: 0.75rem;
+            font-weight: bold;
+        }
+
+        .weak-points ul {
+            list-style: inside disc;
+            color: #991b1b;
+            font-size: 0.95rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .report-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+
+        @media(min-width: 640px) {
+            .report-actions {
+                flex-direction: row;
+                justify-content: center;
+            }
+        }
+
+        .report-btn {
+            flex: 1;
+            padding: 1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1rem;
+        }
+
+        .report-btn.primary {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .report-btn.primary:hover {
+            background-color: #059669;
+        }
+
+        .report-btn.secondary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .report-btn.secondary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .report-btn.outline {
+            background-color: #e2e8f0;
+            color: #334155;
+        }
+
+        .report-btn.outline:hover {
+            background-color: #cbd5e1;
+        }
+
+        /* --- الحركات --- */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===================================== -->
+    <!-- شاشة اختيار الفصول (Home Screen) -->
+    <!-- ===================================== -->
+    <div id="home-screen" class="home-bg">
+        <div class="home-container">
+            <div class="home-icon">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"></path>
+                </svg>
+            </div>
+            <h1 class="home-title">بوابة إتقان التطبيقات الرقمية</h1>
+            <p class="home-desc">نظام تدريب ذكي تفاعلي يسير بك خطوة بخطوة من مرحلة الفهم الأساسي إلى مرحلة "خبير الامتحان" بنسبة تغطية كاملة (100%) لجميع مفاهيم المادة.</p>
+
+            <div class="chapters-grid">
+                <!-- الفصل الأول -->
+                <div class="chapter-card" onclick="startChapter(1)">
+                    <div>
+                        <div class="card-header">
+                            <span class="tag-chapter-1">الفصل الأول</span>
+                            <span class="card-count">25 سؤالاً</span>
+                        </div>
+                        <h3>أساسيات الإدارة التعليمية والمدرسية</h3>
+                        <p>يغطي المفاهيم التقليدية، والفرق بين الإدارة العامة، التربوية، والتعليمية، ومميزات الإدارة الناجحة، وتداخل العلاقات وخصائصها وصعوبة التقييم.</p>
+                    </div>
+                    <div class="start-btn-text">ابدأ التدريب الآن ➔</div>
+                </div>
+
+                <!-- الفصل الثاني -->
+                <div class="chapter-card" onclick="startChapter(2)">
+                    <div>
+                        <div class="card-header">
+                            <span class="tag-chapter-2">الفصل الثاني</span>
+                            <span class="card-count">25 سؤالاً</span>
+                        </div>
+                        <h3>الإدارة الإلكترونية للتعليم</h3>
+                        <p>يغطي سلبيات الإدارة الورقية، المقارنات السبعة، التاريخ والتطور التكنولوجي لـ IBM وMT/ST، والوظائف الإلكترونية (التخطيط المستمر، الرقابة بالثقة والنتائج).</p>
+                    </div>
+                    <div class="start-btn-text">ابدأ التدريب الآن ➔</div>
+                </div>
+
+                <!-- الفصل الثالث -->
+                <div class="chapter-card" onclick="startChapter(3)">
+                    <div>
+                        <div class="card-header">
+                            <span class="tag-chapter-3">الفصل الثالث</span>
+                            <span class="card-count">25 سؤالاً</span>
+                        </div>
+                        <h3>تطبيق الإدارة الإلكترونية</h3>
+                        <p>يغطي مراحل التحول للإدارة الإلكترونية، متطلبات المشروع، شبكات الاتصال (الإنترنت، الإنترانت، الإكسترانت)، السلبيات (التجسس، التبعية)، المعوقات، والآثار التنظيمية.</p>
+                    </div>
+                    <div class="start-btn-text" style="color: #f472b6;">ابدأ التدريب الآن ➔</div>
+                </div>
+
+                <!-- الفصل الرابع -->
+                <div class="chapter-card" onclick="startChapter(4)">
+                    <div>
+                        <div class="card-header">
+                            <span class="tag-chapter-4">الفصل الرابع</span>
+                            <span class="card-count">25 سؤالاً</span>
+                        </div>
+                        <h3>المنصات والبرمجيات المكتبية</h3>
+                        <p>يغطي المنصات التعليمية، الفروق الجوهرية بين LMS وLCMS، مميزات الإدارة الإلكترونية للتعلم، مايكروسوفت أوفيس، كاهوت، وبليكرز.</p>
+                    </div>
+                    <div class="start-btn-text" style="color: #2dd4bf;">ابدأ التدريب الآن ➔</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ===================================== -->
+    <!-- شاشة العرض والتشغيل (Quiz Screen) -->
+    <!-- ===================================== -->
+    <div id="quiz-screen" class="app-container" style="display: none;">
+        <div class="nav-header">
+            <button class="back-btn" onclick="goHome()">➔ القائمة الرئيسية</button>
+            <div id="chapter-title" class="chapter-indicator">الفصل الأول: الإدارة المدرسية</div>
+        </div>
+
+        <div class="title-block">
+            <h1>نظام التدريب التفاعلي</h1>
+            <div id="level-title" class="level-name">المستوى الأول: مبتدئ (Beginner)</div>
+        </div>
+
+        <div class="progress-outer">
+            <div id="progress-bar" class="progress-inner"></div>
+        </div>
+        <div class="progress-labels">
+            <span id="progress-text-done">أتممت 0 سؤال من 0</span>
+            <span id="progress-text-remain">المتبقي: 0</span>
+        </div>
+
+        <!-- كرت السؤال -->
+        <div class="question-card">
+            <div class="question-tags">
+                <span id="question-type" class="tag-type">mcq</span>
+                <span id="question-id" class="tag-id">معرّف السؤال: #1</span>
+            </div>
+            <div id="question-text" class="question-text">السؤال يظهر هنا...</div>
+            <div id="options-container" class="options-list">
+                <!-- أزرار الخيارات تضاف برمجياً هنا -->
+            </div>
+        </div>
+
+        <!-- صندوق التقييم والتوجيه -->
+        <div id="feedback-block" class="feedback-block">
+            <div id="feedback-status" class="feedback-status">إجابة صحيحة الممتازة 👏</div>
+            <div id="smart-review-notice" class="feedback-smart-notice" style="display: none;">
+                ملاحظة التكرار الذكي: تمت إعادة جدولة هذا المفهوم في ذيل القائمة للتثبيت العملي والإتقان لاحقاً.
+            </div>
+            <div class="feedback-content">
+                <div class="feedback-text">
+                    <span style="font-weight: bold; color: var(--bg-dark);">الشرح والتفصيل العلمي: </span>
+                    <span id="feedback-explanation-text">...</span>
+                </div>
+                <div class="feedback-ref">
+                    <span>📖 المرجع من كتاب المادة:</span>
+                    <span id="feedback-ref-pill" class="ref-pill">ص 10</span>
+                </div>
+            </div>
+            <div class="button-row">
+                <button id="continue-btn" class="continue-btn">استمرار والذهاب للسؤال التالي ➔</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ===================================== -->
+    <!-- شاشة التقرير النهائي للمستوى -->
+    <!-- ===================================== -->
+    <div id="report-screen" class="app-container" style="display: none;">
+        <div class="report-card">
+            <div class="report-header">
+                <h2>تقرير الأداء وإتقان المستوى</h2>
+                <button class="back-btn" onclick="goHome()">العودة للرئيسية</button>
+            </div>
+
+            <div id="percent-indicator" class="percent-circle success">0%</div>
+            <p style="color: #64748b; font-weight: bold; margin-bottom: 2rem;">نسبة الإتقان الأساسية (من المحاولة الأولى)</p>
+
+            <div class="stats-summary">
+                <h3>📊 تحليل المستوى الحالي:</h3>
+                <ul>
+                    <li>
+                        <span>المستوى الدراسي:</span>
+                        <span id="report-level-name" style="font-weight: bold;">...</span>
+                    </li>
+                    <li>
+                        <span>الأسئلة المستهدفة بالامتحان:</span>
+                        <span><strong id="report-correct-count">0</strong> من <strong id="report-total-count">0</strong></span>
+                    </li>
+                    <li>
+                        <span>أسئلة التثبيت والمراجعة الذاتية:</span>
+                        <span>أجبت على <strong id="report-extra-count">0</strong> سؤال مكرر حتى تم التثبيت.</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- صندوق نقاط الضعف -->
+            <div id="weak-points-block" class="weak-points" style="display: none;">
+                <h3>⚠️ نقاط الضعف التي تحتاج إلى مراجعتها:</h3>
+                <ul id="weak-points-list">
+                    <!-- النقاط تضاف هنا -->
+                </ul>
+                <p style="text-align: right; font-size: 0.8rem; margin-top: 1rem; color: #7f1d1d; opacity: 0.8;">
+                    * لا تقلق، لقد قام النظام التفاعلي بإلزامك بحل هذه الأسئلة بنهاية الطابور بشكل صحيح للتأكد من زوال اللبس وتثبيت المعلومة تماماً.
+                </p>
+            </div>
+
+            <div id="congrats-panel" class="weak-points" style="display: none; background-color: var(--success-light); border-color: #a7f3d0; color: #065f46;">
+                <h3 style="color: #047857;">🎉 رائع وممتاز!</h3>
+                <p>لقد أجبت على جميع أسئلة هذا المستوى بنجاح ومن المرة الأولى دون ارتكاب أخطاء!</p>
+            </div>
+
+            <div id="mastered-exam-panel" class="weak-points" style="display: none; background: linear-gradient(135deg, #fbbf24, #d97706); color: white; border: none; text-align: center;">
+                <h2 style="font-size: 1.5rem; font-weight: 900; margin-bottom: 0.5rem;">🎉 مبروك! أنت الآن خبير الامتحان وعالم بالمادة! 🎉</h2>
+                <p>لقد أتممت جميع مستويات هذا الفصل بنجاح وتغطية 100% لكامل المادة التعليمية.</p>
+            </div>
+
+            <div class="report-actions">
+                <button id="report-next-btn" class="report-btn primary" style="display: none;">لقد أتقنت المستوى بنجاح! الانتقال للمستوى التالي</button>
+                <button id="report-retry-btn" class="report-btn secondary" style="display: none;">إعادة محاولة المستوى الحالي</button>
+                <button class="report-btn outline" onclick="goHome()">تغيير الفصل الدراسي</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // === STREAMING_CHUNK: تعريف بنك الأسئلة الشامل للفصول الدراسية الأربعة ===
+        const allQuestions = [
+            // ========== الفصل الأول: الإدارة التعليمية والمدرسية (ص 10 - 17) ==========
+            {
+                id: 1, chapter: 1, level: 1, type: "مصطلح", concept: "تعريف الإدارة التربوية الأساسي",
+                question: "اختر المصطلح المناسب: هي الطريقة التي يوجه بها التعليم وتضبط بها أمور الناس وفقاً للاتجاهات الفكرية السائدة في مجتمع معين.",
+                options: ["الإدارة المدرسية", "الإدارة التربوية / التعليمية", "الإدارة العامة", "الإدارة المركزية"],
+                correctAnswer: "الإدارة التربوية / التعليمية",
+                explanation: "الإدارة التربوية والتعليمية والمدرسية هي قيادة عملية توجه التعليم وتضبط أمور الناس بما يتلاءم مع المجتمع.",
+                textRef: "مقدمة الفصل الأول - ص 10"
+            },
+            {
+                id: 2, chapter: 1, level: 1, type: "صح وخطأ", concept: "تعريف وورات",
+                question: "صح أم خطأ: عرّف (وورات) الإدارة التربوية بأنها كل عمل منسق يخدم التربية والتعليم ويتحقق من خلاله إيجاد الوظائف والأجهزة الإدارية.",
+                options: ["صح", "خطأ"],
+                correctAnswer: "صح",
+                explanation: "بالفعل، وورات عرّفها بأنها كل عمل منسق يخدم التربية والتعليم لتحقيق الأهداف الأساسية للتعليم.",
+                textRef: "مقدمة الفصل الأول - ص 10"
+            },
+            {
+                id: 3, chapter: 1, level: 1, type: "أكمل", concept: "أهداف الإدارة",
+                question: "أكمل الفراغ: من أهداف الإدارة التربوية بناء شخصية المنتمي للمؤسسة بصورة متكاملة من جميع النواحي: العقلية، العملية، الجسمية، و........",
+                options: ["المادية", "الروحية والاجتماعية", "السياسية", "الاقتصادية"],
+                correctAnswer: "الروحية والاجتماعية",
+                explanation: "تهدف الإدارة لنمو الطالب من كافة النواحي (العقلية، الجسمية، الروحية، والاجتماعية).",
+                textRef: "أهداف الإدارة التربوية - ص 10 و 12"
+            },
+            {
+                id: 4, chapter: 1, level: 1, type: "mcq", concept: "أهداف الإدارة",
+                question: "أي مما يلي يُعد من الأهداف الاستراتيجية المستقبلية للإدارة التربوية؟",
+                options: ["تطبيق الأنظمة الصادرة فقط", "وضع الخطط اللازمة لنمو وتطور المؤسسة في المستقبل", "تقليل عدد المعلمين", "التركيز على الجانب العقلي فقط"],
+                correctAnswer: "وضع الخطط اللازمة لنمو وتطور المؤسسة في المستقبل",
+                explanation: "من أهدافها المستقبلية: وضع الخطط اللازمة لنمو وتطور المؤسسة، والإشراف الكامل على مشاريع المؤسسة حالياً ومستقبلاً.",
+                textRef: "أهداف الإدارة التربوية - ص 11"
+            },
+            {
+                id: 5, chapter: 1, level: 1, type: "صح وخطأ", concept: "طبيعة العمل المدرسي",
+                question: "صح أم خطأ: الإدارة المدرسية هي عمل فردي يعتمد بشكل كلي على مدير المدرسة فقط.",
+                options: ["صح", "خطأ"],
+                correctAnswer: "خطأ",
+                explanation: "العبارة الصحيحة: الإدارة هي (عمل جماعي) لا يستطيع الفرد القيام بو منفرداً، ويتطلب التنسيق وتوجيه جهود الأفراد.",
+                textRef: "الإدارة المدرسية كعمل جماعي - ص 13"
+            },
+            {
+                id: 6, chapter: 1, level: 2, type: "mcq", concept: "مبادئ الإدارة التربوية",
+                question: "يقوم مفهوم الإدارة التربوية على 4 مبادئ أساسية. المبدأ الذي ينظر للمؤسسة كمجموعة من الأجزاء التي يتم التنسيق بينها لتحقيق الأهداف هو:",
+                options: ["مبدأ تحديد الأهداف", "مبدأ المشاركة والالتزام", "مبدأ النظام الكلي", "مبدأ الرقابة وتقويم الأداء"],
+                correctAnswer: "مبدأ النظام الكلي",
+                explanation: "مبدأ النظام الكلي ينظر للمؤسسة ككل متكامل يتم التنسيق بين أجزائه لتحقيق الهدف.",
+                textRef: "مبادئ الإدارة التربوية - ص 11"
+            },
+            {
+                id: 7, chapter: 1, level: 2, type: "mcq", concept: "مبادئ الإدارة التربوية",
+                question: "أي مبدأ من مبادئ الإدارة يرتبط ارتباطاً وثيقاً بـ (الاستراتيجية الزمنية، القياس الكمي، والشمول والجدية)؟",
+                options: ["مبدأ النظام الكلي", "مبدأ تحديد الأهداف", "مبدأ المشاركة", "مبدأ الرقابة"],
+                correctAnswer: "مبدأ تحديد الأهداف",
+                explanation: "مبدأ تحديد الأهداف يرتبط بالتخطيط وترتكز استراتيجيته على الزمن، القياس الكمي، الشمول والجدية.",
+                textRef: "مبادئ الإدارة التربوية - ص 11"
+            },
+            {
+                id: 8, chapter: 1, level: 2, type: "تعليل", concept: "مبادئ الإدارة التربوية",
+                question: "سؤال تعليل: لماذا يعتبر 'مبدأ الرقابة وتقويم الأداء' مهماً في الإدارة التربوية؟",
+                options: ["لمعاقبة الموظفين المقصرين", "للحصول على تغذية راجعة مستمرة واكتشاف المعوقات والبحث عن حلول", "لإجبار المعلمين على العمل الإضافي", "لتقليل الميزانية المدرسية"],
+                correctAnswer: "للحصول على تغذية راجعة مستمرة واكتشاف المعوقات والبحث عن حلول",
+                explanation: "يتم من خلاله الحصول على تغذية راجعة تكشف ما يعوق تحقيق الأهداف للبحث عن حلول موضوعية بمقارنة الإنجاز الفعلي بالمستهدف.",
+                textRef: "مبادئ الإدارة التربوية - ص 11"
+            },
+            {
+                id: 9, chapter: 1, level: 2, type: "mcq", concept: "مهمات الإدارة المدرسية",
+                question: "لضمان نجاح الإدارة المدرسية في أداء مهماتها التربوية، يجب أن يتم توجيه العاملين والاعتماد على:",
+                options: ["الروتين المكتبي", "الأوامر والتعليمات الصارمة", "الإقناع والحرية والديمقراطية بدلاً من التسلط", "تطبيق اللوائح حرفياً دون مرونة"],
+                correctAnswer: "الإقناع والحرية والديمقراطية بدلاً من التسلط",
+                explanation: "ينبغي تحقيق الأهداف عن طريق الإقناع وليس التسلط، ومنح العاملين مستويات أداء عالية لأن الحرية والديمقراطية أقوى دوافع العمل، مع تقليل الروتين المكتبي والقرارات الجامدة لفتح باب الإبداع.",
+                textRef: "مهمات نجاح الإدارة المدرسية - ص 13"
+            },
+            {
+                id: 10, chapter: 1, level: 2, type: "تكملة", concept: "اشتقاق الأهداف",
+                question: "يجب أن تشتق الإدارة التعليمية أهدافها من:",
+                options: ["أهداف المديرين الشخصية", "فلسفة الدول المجاورة", "طبيعة مجتمعنا وتتكامل مع أهداف المستويات الإدارية", "الكتب المدرسية القديمة"],
+                correctAnswer: "طبيعة مجتمعنا وتتكامل مع أهداف المستويات الإدارية",
+                explanation: "يجب أن تشتق الأهداف من طبيعة مجتمعنا وتتكامل مع المستويات: الوطني، المحلي، والإجرائي.",
+                textRef: "مهمات نجاح الإدارة المدرسية - ص 12"
+            },
+            {
+                id: 11, chapter: 1, level: 3, type: "مقارنة", concept: "علاقة الإدارة العامة بالتعليمية",
+                question: "ما هي طبيعة العلاقة بين 'الإدارة العامة' و 'الإدارة التعليمية'؟",
+                options: ["علاقة تنافس وتضاد", "علاقة الكل بالجزء، فالإدارة العامة هي (الأم)", "لا توجد علاقة بينهما إطلاقاً", "علاقة تبعية مادية فقط"],
+                correctAnswer: "علاقة الكل بالجزء، فالإدارة العامة هي (الأم)",
+                explanation: "العلاقة هي علاقة الكل بالجزء، فالإدارة العامة هي الأم وأخذت منها الإدارة التعليمية مبادئها وقوانينها.",
+                textRef: "علاقة الإدارة العامة بالإدارة التعليمية - ص 13"
+            },
+            {
+                id: 12, chapter: 1, level: 3, type: "mcq", concept: "الخطوات الإدارية",
+                question: "تشترك الإدارة العامة مع الإدارة التعليمية في الخطوات الرئيسية لأسلوب العمل. أي من الترتيبات التالية يمثل هذه الخطوات بشكل صحيح؟",
+                options: ["تنظيم، توجيه، عشوائية", "تخطيط، تنظيم، توجيه، متابعة، اتخاذ قرارات", "اتخاذ قرارات، تخطيط فقط", "رقابة، عقاب، توجيه"],
+                correctAnswer: "تخطيط، تنظيم، توجيه، متابعة، اتخاذ قرارات",
+                explanation: "يشتركان في خطوات التخطيط والتنظيم والتوجيه والمتابعة واتخاذ القرارات ووضع القوانين.",
+                textRef: "علاقة الإدارة العامة بالإدارة التعليمية - ص 14"
+            },
+            {
+                id: 13, chapter: 1, level: 3, type: "مقارنة", concept: "التفريق بين أنواع الإدارات",
+                question: "إدارة تعنى بتنفيذ السياسة التربوية (على مستوى الوزارة)، وتشكيل النظام التربوي للدولة وقوانينه. هذا وصف لـ:",
+                options: ["الإدارة المدرسية", "الإدارة التعليمية", "الإدارة التربوية", "الإدارة العامة"],
+                correctAnswer: "الإدارة التربوية",
+                explanation: "الإدارة التربوية: هي إدارة التعليم على مستوى وزارة التربية والتعليم، وتعنى بالسياسة العامة للدولة وتشكيل النظام التربوي وقوانينه.",
+                textRef: "التفريق بين أنواع الإدارات - ص 14"
+            },
+            {
+                id: 14, chapter: 1, level: 3, type: "مقارنة", concept: "التفريق بين أنواع الإدارات",
+                question: "الإدارة التي تدير الوحدة التعليمية على المستوى الإجرائي وتنفذ السياسة على أرض الواقع وتتبع المناهج والمقررات هي الإدارة المدرسية.",
+                options: ["صح", "خطأ"],
+                correctAnswer: "صح",
+                explanation: "الإدارة المدرسية هي المستوى الإجرائي والعملي والتنفيذي لتطبيق السياسة التعليمية على أرض الواقع داخل أسوار المدرسة.",
+                textRef: "التفريق بين أنواع الإدارات - ص 14"
+            },
+            {
+                id: 15, chapter: 1, level: 3, type: "مقارنة", concept: "التفريق بين أنواع الإدارات",
+                question: "الإدارة التي تدير التعليم وفقاً للمجتمع وأوضاعه على مستوى (الولايات والمحافظات) هي:",
+                options: ["الإدارة المدرسية", "الإدارة التعليمية", "الإدارة التربوية", "الإدارة المحلية"],
+                correctAnswer: "الإدارة التعليمية",
+                explanation: "الإدارة التعليمية تدير التعليم على مستوى الولايات والمحافظات (مثل مديريات التربية والتعليم داخل الدولة).",
+                textRef: "التفريق بين أنواع الإدارات - ص 14"
+            },
+            {
+                id: 16, chapter: 1, level: 4, type: "خصائص", concept: "ضرورتها الملحة",
+                question: "من خصائص الإدارة التعليمية (ضرورتها الملحة). ما السبب الرئيسي لهذه الضرورة مقارنة بالأنشطة الأخرى؟",
+                options: ["لأنها تدر أرباحاً مالية سريعة", "لارتباط المؤسسة بخدمات لا غنى عنها في رعاية الأبناء وتطلعات الآباء لمستقبل أبنائهم", "لأنها سهلة الإدارة ولا تحتاج إلى مجهود", "لعدم وجود رقابة مجتمعية عليها"],
+                correctAnswer: "لارتباط المؤسسة بخدمات لا غنى عنها في رعاية الأبناء وتطلعات الآباء لمستقبل أبنائهم",
+                explanation: "الخدمات التعليمية ضرورة ملحة للآباء والمجتمع وتعتبر من أكثر ألوان النشاط إلحاحاً للشعوب لرفاهية المجتمع وتقدمه.",
+                textRef: "خصائص الإدارة التعليمية - ص 15"
+            },
+            {
+                id: 17, chapter: 1, level: 4, type: "استنتاج/مثال", concept: "المنظور الجماهيري",
+                question: "ذكر الفصل مثال (مصنع إنتاج الصلب) للمقارنة مع المدرسة. ما الغرض من هذا المثال؟",
+                options: ["لإثبات أن إدارة المدارس أسهل من المصانع", "لإيضاح 'المنظور الجماهيري'، حيث يهتم المجتمع بشدة بالمدرسة لأنها تتعامل مع أبنائهم (أغلى ما يملكون) بعكس المصنع", "لشرح أهمية صناعة الحديد والصلب للتعليم", "لتوضيح الكفاءة المادية الملموسة للإنتاج"],
+                correctAnswer: "لإيضاح 'المنظور الجماهيري'، حيث يهتم المجتمع بشدة بالمدرسة لأنها تتعامل مع أبنائهم (أغلى ما يملكون) بعكس المصنع",
+                explanation: "ما يحدث في مصنع الصلب يبعد كثيراً عن الاهتمام الجماهيري المباشر مقارنة بالمدرسة التي تحتضن أبناء المجتمع، مما يخلق المنظور الجماهيري للإدارة التعليمية.",
+                textRef: "خصائص الإدارة التعليمية - ص 15"
+            },
+            {
+                id: 18, chapter: 1, level: 4, type: "خصائص", concept: "تعقد الوظائف",
+                question: "صح أم خطأ: عملية التدريس والتعلم تعتبر أقل تعقيداً من إدارة مصنع أو آلة ميكانيكية.",
+                options: ["صح", "خطأ"],
+                correctAnswer: "خطأ",
+                explanation: "العبارة خاطئة. التدريس والتعلم تتضمن تعقيداً يفوق إدارة آلة ميكانيكية أو يدوية، بل قد يفوق تعقيد إدارة قسم العلاج النفسي نفسه.",
+                textRef: "خصائص الإدارة التعليمية - ص 16"
+            },
+            {
+                id: 19, chapter: 1, level: 4, type: "خصائص", concept: "صعوبة قياس النتائج",
+                question: "لماذا يصعب قياس النتائج التربوية بدقة بعكس مصنع السيارات؟",
+                options: ["لأن المعلمين يرفضون التقييم المستمر", "لأن الإدارة تتعامل مع (الإنسان) ولصعوبة قياس تغير السلوك، ووجود جهات أخرى مؤثرة كالمسجد والأسرة والنادي", "لعدم وجود أدوات قياس وتقييم حديثة", "بسبب تذبذب ميزانية التعليم السنوية"],
+                correctAnswer: "لأن الإدارة تتعامل مع (الإنسان) ولصعوبة قياس تغير السلوك، ووجود جهات أخرى مؤثرة كالمسجد والأسرة والنادي",
+                explanation: "التعامل مع الإنسان المعقد، وصعوبة قياس التغيرات المهارية والقيمية، واشتراك جهات التنشئة الأخرى (أسرة، مساجد، أندية) يجعل عزل أثر المدرسة وقياسه بدقة أمراً صعباً جداً.",
+                textRef: "خصائص الإدارة التعليمية - ص 16 و 17"
+            },
+            {
+                id: 20, chapter: 1, level: 4, type: "خصائص", concept: "التأهيل الفني",
+                question: "تتطلب الإدارة التعليمية (تأهيلاً فنياً ومهنياً) دقيقاً للعاملين بها. ما الذي يبرز هذا التعقيد مقارنة بإدارة مصنع؟",
+                options: ["التركيز على القيم المهنية وأحكام المعلمين ودقة الاتصال الإنساني أكثر من التركيز الآلي", "الحصول على شهادات في الهندسة الميكانيكية وإدارة الآلات", "تطبيق الروتين المكتبي البسيط فقط", "لا يوجد فرق ملموس فكلاهما يعتمد على العمل الروتيني"],
+                correctAnswer: "التركيز على القيم المهنية وأحكام المعلمين ودقة الاتصال الإنساني أكثر من التركيز الآلي",
+                explanation: "يتطلب التعليم مؤهلات وتدريباً مهنياً يضيف تعقيداً للإدارة ويحتم التركيز على القيم المهنية وأحكام المعلمين ودقة الاتصال الإنساني.",
+                textRef: "خصائص الإدارة التعليمية - ص 16"
+            },
+            {
+                id: 21, chapter: 1, level: 5, type: "سيناريو", concept: "صفات الإدارة الناجحة",
+                question: "موقف تطبيقي: حدث تغيير مفاجئ في سياسات التعليم للتحول إلى التعليم الإلكتروني بسبب أزمة طارئة. رفض مدير مدرسة تغيير خطته القديمة بحجة الالتزام بالقوالب الثابتة والمقررة سلفاً. أي صفة من صفات (الإدارة الناجحة) يفتقدها هذا المدير؟",
+                options: ["الكفاءة المالية", "المرونة وعدم الجمود والتكيف مع الظروف والمواقف", "التأهيل الفني الميكانيكي", "تداخل العلاقات الخارجية"],
+                correctAnswer: "المرونة وعدم الجمود والتكيف مع الظروف والمواقف",
+                explanation: "من أهم مميزات الإدارة الناجحة ألا تكون ذات قوالب جامدة وثابتة، بل تتسم بالمرونة وتتكيف حسب مقتضيات الموقف وتغير الظروف.",
+                textRef: "مميزات الإدارة التعليمية الناجحة - ص 17"
+            },
+            {
+                id: 22, chapter: 1, level: 5, type: "سيناريو", concept: "تداخل العلاقات",
+                question: "يلاحظ أحد الباحثين أن قرار فصل طالب من المدرسة أثر على علاقة المدرسة بأسرته، وأدى لتذمر بين زملائه بالفصل، كما تدخل النادي الرياضي التابع للمنطقة لحل المشكلة. هذا السيناريو يعكس أياً من خصائص الإدارة التعليمية؟",
+                options: ["صعوبة قياس النتائج", "التأهيل المهني", "تداخل وتشابك العلاقات", "الضرورة الملحة للمدرسة"],
+                correctAnswer: "تداخل وتشابك العلاقات",
+                explanation: "خاصية تداخل العلاقات تعني وجود ترابط قوي وتشابك (تلاميذ ببعضهم، معلمين بتلاميذ، مدرسة بأسرة ومجتمع محلي)، وأي حدث يؤثر في هذه الشبكة المعقدة.",
+                textRef: "خصائص الإدارة التعليمية - ص 16"
+            },
+            {
+                id: 23, chapter: 1, level: 5, type: "تحليل", concept: "الكفاءة والفاعلية",
+                question: "كيف يتحقق مفهوم (الكفاءة والفاعلية) في الإدارة التعليمية الناجحة بناءً على ما ورد بالفصل؟",
+                options: ["بتقليل رواتب ومكافآت المعلمين باستمرار", "بالاستخدام الأمثل للإمكانيات البشرية والمادية لتحقيق الغرض من تربية النشء ومدى ما تحققه في التدريس", "بالتركيز على المظهر الخارجي وصيانة مبنى المدرسة فقط", "بشراء أجهزة تكنولوجية دون تدريب المعلمين على تشغيلها"],
+                correctAnswer: "بالاستخدام الأمثل للإمكانيات البشرية والمادية لتحقيق الغرض من تربية النشء ومدى ما تحققه في التدريس",
+                explanation: "تتميز الإدارة الناجحة بالكفاءة والفاعلية من خلال الاستخدام الأمثل للموارد (بشرية ومادية) للوصول لأفضل نتائج في تربية النشء وعملية التدريس.",
+                textRef: "مميزات الإدارة التعليمية الناجحة - ص 17"
+            },
+            {
+                id: 24, chapter: 1, level: 5, type: "تركيب", concept: "مبادئ الإدارة",
+                question: "أي من العبارات التالية تلخص بشكل صحيح الربط بين 'مبدأ المشاركة والالتزام' و 'الابتعاد عن الروتين والتسلط' لنجاح المؤسسة؟",
+                options: ["التسلط يضمن المشاركة الدقيقة والإجبارية", "المشاركة وتحمل المسؤولية تولد التزاماً ذاتياً، ومناخ الحرية والديمقراطية يخلق دافعاً قوياً للإبداع والعمل بعيداً عن كبت الروتين", "الروتين والمركزية ضرورية لضمان مشاركة الجميع في اتخاذ القرار", "لا علاقة تنظيمية بين المشاركة وطرق إدارة الموظفين"],
+                correctAnswer: "المشاركة وتحمل المسؤولية تولد التزاماً ذاتياً، ومناخ الحرية والديمقراطية يخلق دافعاً قوياً للإبداع والعمل بعيداً عن كبت الروتين",
+                explanation: "تحمل المسؤولية يولد شعوراً بالالتزام، ولنجاح ذلك يجب إقناع العاملين بعيداً عن التسلط والروتين وتوفير مناخ الحرية لإطلاق إبداعاتهم وقدراتهم.",
+                textRef: "مبادئ الإدارة ومهمات نجاح الإدارة المدرسية - ص 11 و 13"
+            },
+            {
+                id: 25, chapter: 1, level: 5, type: "خدعة/امتحان", concept: "علاقة الإدارات الثلاث",
+                question: "سؤال خادع: إذا أرادت الدولة وضع سياسة تعليمية جديدة وتغيير النظام التربوي وتشريعاته، فإن الإدارة المسؤولة عن ذلك مباشرة هي الإدارة التعليمية بمستويات المحافظات. صح أم خطأ؟",
+                options: ["صح", "خطأ"],
+                correctAnswer: "خطأ",
+                explanation: "العبارة خاطئة تماماً. وضع السياسة التربوية وتشكيل النظام التربوي وتشريعاته وقوانينه يقع في نطاق (الإدارة التربوية) على مستوى وزارة التربية والتعليم، أما الإدارة التعليمية فتختص بالتنفيذ على مستوى الولايات والمحافظات.",
+                textRef: "التفريق بين الإدارات - ص 14"
+            },
+
+            // ========== الفصل الثاني: الإدارة الإلكترونية (ص 18 - 36) ==========
+            {
+                id: 26, chapter: 2, level: 1, type: "mcq", concept: "تعريف الإدارة التقليدية",
+                question: "وفقاً للفصل الثاني، ما هو المفهوم الدقيق لـ (الإدارة التقليدية)؟",
+                options: [
+                    "الإدارة التي تعتمد بالكامل على تكنولوجيا الذكاء الاصطناعي والشبكات اللاسلكية",
+                    "الجهد الإنساني الذي يتعلق بتخطيط وتنظيم وقيادة ورقابة الموارد البشرية والمادية بكفاءة وفعالية لتحقيق أهداف محددة وتعتمد أساساً على المجهود البشري والورقي",
+                    "الإدارة التي تهدف لإلغاء المعاملات الورقية تماماً داخل المؤسسات التعليمية",
+                    "إدارة المشروعات والندوات والمؤتمرات عن بعد دون تواجد حقيقي"
+                ],
+                correctAnswer: "الجهد الإنساني الذي يتعلق بتخطيط وتنظيم وقيادة ورقابة الموارد البشرية والمادية بكفاءة وفعالية لتحقيق أهداف محددة وتعتمد أساساً على المجهود البشري والورقي",
+                explanation: "الإدارة التقليدية تعتمد على المجهود البشري والوثائق الورقية لإنجاز وظائف الإدارة مما يجعل تقديم الخدمات بطيئاً ومكلفاً.",
+                textRef: "مفهوم الإدارة التقليدية - ص 19"
+            },
+            {
+                id: 27, chapter: 2, level: 1, type: "mcq", concept: "سلبيات الإدارة التقليدية الورقية",
+                question: "أي مما يلي يُعد من السلبيات الرئيسية للإدارة التقليدية (الورقية) التي ذكرها الفصل كسبب يدعو للتفكير في الإدارة الإلكترونية؟",
+                options: [
+                    "تلف بعض المعاملات الورقية بسبب التقادم، صعوبة الحصول على المعلومات، والتكاليف الباهظة للصيانة وتوفير غرف كبيرة للحفظ",
+                    "زيادة سرعة اتخاذ القرارات من قبل الإدارة العليا والموظفين",
+                    "تطابق آراء الموظفين وزيادة التواصل الأفقي والمستمر بينهم",
+                    "الاستخدام الأمثل للموارد الاقتصادية والبيئية وصناعة القرار"
+                ],
+                correctAnswer: "تلف بعض المعاملات الورقية بسبب التقادم، صعوبة الحصول على المعلومات، والتكاليف الباهظة للصيانة وتوفير غرف كبيرة للحفظ",
+                explanation: "تعتمد الإدارة الورقية على حفظ المعاملات في غرف كبيرة وتكون عرضة للتلف بفعل التقادم أو الضياع سهواً أو عمداً مع تكاليف باهظة للصيانة.",
+                textRef: "سلبيات الإدارة التقليدية - ص 21"
+            },
+            {
+                id: 28, chapter: 2, level: 1, type: "مصطلح", concept: "تعريف الإدارة الإلكترونية",
+                question: "اختر المصطلح المناسب لـ: 'عملية تحويل كافة الأعمال والخدمات الإدارية التقليدية إلى أعمال وخدمات إلكترونية تنفذ بسرعة عالية ودقة متناهية وبدون استخدام للورق'.",
+                options: ["إعادة هندسة العمليات", "الإدارة بلا ورق / الإدارة الإلكترونية", "إدارة علاقات العملاء CRM", "البيئة المعلوماتية المعقدة"],
+                correctAnswer: "الإدارة بلا ورق / الإدارة الإلكترونية",
+                explanation: "هذا التعريف يركز على مصطلح الإدارة بلا ورق (Paperless Management) والتحويل الشامل للأعمال التقليدية إلى خدمات إلكترونية سريعة خالية من الورق.",
+                textRef: "مفاهيم الإدارة الإلكترونية - ص 20"
+            },
+            {
+                id: 29, chapter: 2, level: 1, type: "صح وخطأ", concept: "تعريف إعادة هندسة الأعمال الحكومية",
+                question: "صح أم خطأ: يُعرّف الفصل إعادة هندسة الأعمال الحكومية بأنها تفعيل تقنية المعلومات والاتصال لتحويل العلاقات والخدمات الحكومية إلى صيغة إلكترونية لتقديمها بكفاءة وشفافية وتحقيق طموحات المجتمع.",
+                options: ["صح", "خطأ"],
+                correctAnswer: "صح",
+                explanation: "هذا هو التعريف الرابع الوارد بالإدارة الإلكترونية والذي يركز على إعادة هندسة الأعمال وتفعيل التفاعل الرقمي بين الأفراد والوحدات الحكومية.",
+                textRef: "تعريف الإدارة الإلكترونية (الجدول) - ص 20"
+            },
+            {
+                id: 30, chapter: 2, level: 1, type: "mcq", concept: "أهمية المعلومات في المجتمعات",
+                question: "ما هو الترتيب الذي تحظى به (المعلومات) كعامل مؤثر في تقدم الإدارات والمجتمعات الحديثة وفقاً للفصل؟",
+                options: [
+                    "تعتبر العامل الأول والوحيد دائماً",
+                    "تأتي في المرتبة الثانية مباشرة بعد (العامل البشري) كأهم العوامل التي يقاس بها تقدم الإدارة",
+                    "تأتي بعد رأس المال المالي والمباني الإدارية",
+                    "ليست ذات أهمية قياساً بالإمكانيات التقليدية والورقية للمؤسسة"
+                ],
+                correctAnswer: "تأتي في المرتبة الثانية مباشرة بعد (العامل البشري) كأهم العوامل التي يقاس بها تقدم الإدارة",
+                explanation: "المعلومات أصبحت بعد العامل البشري مباشرة أهم العوامل التي يُقاس بها تقدم الإدارة وتطور المجتمعات في شتى مجالات الحياة.",
+                textRef: "أهمية المعلومات وتأثيرها - ص 21"
+            },
+            {
+                id: 31, chapter: 2, level: 2, type: "أكمل", concept: "البيئة المعلوماتية المعقدة",
+                question: "أكمل الفراغ: أهم مظاهر (البيئة المعلوماتية المعقدة) التي تعيشها المجتمعات الحديثة هي كثرة المعلومات و........ المتوفر لاستهلاكها.",
+                options: ["كثرة الوقت", "قلة الوقت", "انعدام الرقابة على الوقت", "وفرة الكوادر المتاحة للوقت"],
+                correctAnswer: "قلة الوقت",
+                explanation: "البيئة المعلوماتية المعقدة تتميز بكثرة وتدفق المعلومات مقابل قلة الوقت المتاح أمام متخذ القرار وصانع المعرفة لاستهلاكها وتنظيمها.",
+                textRef: "مظاهر البيئة المعلوماتية المعقدة - ص 22"
+            },
+            {
+                id: 32, chapter: 2, level: 2, type: "مقارنة", concept: "المقارنة المنهجية: طبيعة العلاقات",
+                question: "قارن بين المفهوم التقليدي والإلكتروني من حيث (طبيعة العلاقة بين أطراف التعامل):",
+                options: [
+                    "في التقليدي تكون العلاقة غير مباشرة، وفي الإلكتروني تكون العلاقة مباشرة وجهاً لوجه",
+                    "في التقليدي تكون العلاقة مباشرة ومواجهة، بينما في الإلكتروني تشير إلى انتفاء العلاقة المباشرة ووجود الأطراف عبر الشبكة في نفس الوقت أو أوقات مختلفة",
+                    "لا يوجد أي اختلاف في طبيعة العلاقات بين المفهومين",
+                    "في التقليدي تنعدم العلاقة تماماً بين أطراف المعاملة"
+                ],
+                correctAnswer: "في التقليدي تكون العلاقة مباشرة ومواجهة، بينما في الإلكتروني تشير إلى انتفاء العلاقة المباشرة ووجود الأطراف عبر الشبكة في نفس الوقت أو أوقات مختلفة",
+                explanation: "الإدارة الإلكترونية تلغي ضرورة المواجهة المباشرة واللقاء الفعلي بين طرفي المعاملة، وتستبدلها بالتواصل الشبكي المتزامن أو اللامتزامن.",
+                textRef: "أسس المقارنة المفهومية (نقطة 2) - ص 22"
+            },
+            {
+                id: 33, chapter: 2, level: 2, type: "mcq", concept: "المقارنة المنهجية: نطاق الخدمة",
+                question: "من حيث (نطاق خدمة العملاء)، يمتد العمل في الإدارة الإلكترونية إلى:",
+                options: [
+                    "5 أيام في الأسبوع وفقاً لمواعيد العمل الرسمية للمنظمات",
+                    "7 أيام في الأسبوع، وعلى مدار 24 ساعة يومياً",
+                    "6 أيام في الأسبوع مع إجازة الجمعة فقط بمعدل 8 ساعات يومية",
+                    "ساعات محددة يختارها العميل عبر البريد الإلكتروني"
+                ],
+                correctAnswer: "7 أيام في الأسبوع، وعلى مدار 24 ساعة يومياً",
+                explanation: "توفر الإدارة الإلكترونية الخدمات بشكل مستمر لا ينقطع (7 أيام بالأسبوع، 24 ساعة باليوم)، بعكس الإدارة التقليدية المحددة بأيام العمل وساعاتها الرسمية.",
+                textRef: "أسس المقارنة المفهومية (نقطة 6) - ص 23"
+            },
+            {
+                id: 34, chapter: 2, level: 2, type: "صح وخطأ", concept: "المقارنة المنهجية: نوعية الوثائق",
+                question: "صح أم خطأ: تعتمد ممارسات الإدارة الإلكترونية على الوثائق والمستندات الورقية الرسمية والشهادات الموقعة يدوياً فقط لضمان الأمان.",
+                options: ["صح", "خطأ"],
+                correctAnswer: "خطأ",
+                explanation: "العبارة خاطئة. تعتمد الإدارة الإلكترونية على الوثائق والمستندات الرقمية المخزنة والمتبادلة شبكياً (دون استخدام أية وثائق ورقية رسمية).",
+                textRef: "أسس المقارنة المفهومية (نقطة 4) - ص 23"
+            },
+            {
+                id: 35, chapter: 2, level: 2, type: "mcq", concept: "المقارنة المنهجية: الاعتماد على الموارد",
+                question: "تعتمد الإدارة الإلكترونية في إمكانية تنفيذ مكوناتها وفي استغلال الإمكانيات على استخدام تكنولوجيا:",
+                options: [
+                    "الأوراق المؤرشفة وصيانة المكاتب", 
+                    "تكنولوجيا الواقع الافتراضي", 
+                    "الآلات الكاتبة اليدوية الكهربائية", 
+                    "الاتصال السلكي المباشر بالعميل"
+                ],
+                correctAnswer: "تكنولوجيا الواقع الافتراضي",
+                explanation: "ممارسات مفهوم الإدارة الإلكترونية تعتمد على استخدام تكنولوجيا الواقع الافتراضي والوسائط والشبكات الرقمية لضمان استخدام الموارد بأفضل صورة ممكنة.",
+                textRef: "أسس المقارنة المفهومية (نقطة 7) - ص 23"
+            },
+            {
+                id: 36, chapter: 2, level: 3, type: "mcq", concept: "التطور التاريخي: البدايات وشركة IBM",
+                question: "متى بدأت أولى بدايات الإدارة الإلكترونية تاريخياً؟ وما المصطلح الذي ابتكرته شركة IBM حينها؟",
+                options: [
+                    "عام 1950 وابتكرت مصطلح 'الواقع الافتراضي'",
+                    "عام 1960 عندما ابتكرت شركة IBM مصطلح 'معالج الكلمات' (Word Processor) لوصف فعاليات طابعتها الكهربائية",
+                    "عام 1990 بابتكار شبكة الويب العالمية وموقع مايكروسوفت الأساسي",
+                    "عام 1973 بصياغة مصطلح 'المكتب اللاورقي' رسمياً"
+                ],
+                correctAnswer: "عام 1960 عندما ابتكرت شركة IBM مصطلح 'معالج الكلمات' (Word Processor) لوصف فعاليات طابعتها الكهربائية",
+                explanation: "بدايات الإدارة الإلكترونية بدأت عام 1960 حين أطلقت شركة IBM مصطلح 'Word Processor' لربط الطابعات الكهربائية بالكمبيوتر ولفت انتباه المكاتب لأهمية تكنولوجيتها.",
+                textRef: "التطور التاريخي للإدارة الإلكترونية - ص 24"
+            },
+            {
+                id: 37, chapter: 2, level: 3, type: "mcq", concept: "جهاز MT/ST التاريخي",
+                question: "في عام 1964، أنتجت شركة IBM جهازاً أحدث نقلة في تقليص الجهد الإداري عُرف باسم MT/ST. ما هي آلية عمله الأساسية؟",
+                options: [
+                    "هو جهاز فاكس يرسل رسائل ورقية مشفرة عبر مسافات بعيدة للغاية",
+                    "جهاز يحفظ الكلمات والرسائل على شريط ممنطط لاسترجاعها وإعادة طباعتها تلقائياً مع تغيير الاسم والعنوان لكل مرسل إليه",
+                    "أول كمبيوتر شخصي ضخم يعتمد على لغة الآلة الثنائية فقط",
+                    "آلة نسخ وتصوير ورقي سريع من دون حبر"
+                ],
+                correctAnswer: "جهاز يحفظ الكلمات والرسائل على شريط ممنطط لاسترجاعها وإعادة طباعتها تلقائياً مع تغيير الاسم والعنوان لكل مرسل إليه",
+                explanation: "جهاز MT/ST (الشريط الممنطط / جهاز طابعة جهاز الطابعة المختار) سمح بكتابة الرسائل وحفظها على شريط مغناطيسي لإعادة طباعتها واسترجاعها تلقائياً مما وفر جهداً كبيراً خاصة عند مخاطبة أعداد كبيرة.",
+                textRef: "التطور التاريخي - ص 24"
+            },
+            {
+                id: 38, chapter: 2, level: 3, type: "صح وخطأ", concept: "تاريخ المكتب اللاورقي وزيروكس",
+                question: "صح أم خطأ: استخدم مصطلح المكتب اللاورقي (Paperless Office) لأول مرة عام 1973، وفي عام 1974 روجت له مؤسسة (زيروكس) كرمز لمكتب المستقبل.",
+                options: ["صح", "خطأ"],
+                correctAnswer: "صح",
+                explanation: "العبارة صحيحة تاريخياً. ظهر المصطلح لأول مرة في 1973 للإشارة للتحول الرقمي، ثم تبنته وروّجت له زيروكس Xerox في عام 1974.",
+                textRef: "التطور التاريخي للإدارة الإلكترونية - ص 25"
+            },
+            {
+                id: 39, chapter: 2, level: 3, type: "mcq", concept: "انطلاقة مايكروسوفت والإنترنت",
+                question: "ماذا حدث في عام 1996 و نهاية التسعينات من تطورات ساهمت في ترسيخ مفهوم الإدارة الإلكترونية؟",
+                options: [
+                    "تأسيس شركة IBM وصناعة الطابعات الكهربائية الورقية لأول مرة بالأسواق",
+                    "استخدمت مايكروسوفت الربط الشبكي بين حواسيبها لتقليص استخدام الورق في 1996، وانتشر مصطلح الإدارة الإلكترونية نهاية التسعينات مع انتشار شبكة الإنترنت وتوفير الخدمات عن بعد",
+                    "تخلت الشركات تماماً عن مفهوم الحواسيب الشخصية وعادت للمعاملات الورقية لسلامتها وأمانها",
+                    "صناعة أول جهاز طباعة يعمل بتقنية MT/ST للشركات التعليمية الصغيرة"
+                ],
+                correctAnswer: "استخدمت مايكروسوفت الربط الشبكي بين حواسيبها لتقليص استخدام الورق في 1996، وانتشر مصطلح الإدارة الإلكترونية نهاية التسعينات مع انتشار شبكة الإنترنت وتوفير الخدمات عن بعد",
+                explanation: "بدأت مايكروسوفت بالانطلاق الشبكي الداخلي في 1996 لتقليص استخدام الورق، وبنهاية التسعينات مع توسع الإنترنت شاع استخدام مصطلح الإدارة الإلكترونية عالمياً لتقديم الخدمات عن بعد.",
+                textRef: "التطور التاريخي - ص 25"
+            },
+            {
+                id: 40, chapter: 2, level: 3, type: "mcq", concept: "الأسباب الداعية للتحول الإلكتروني",
+                question: "وفقاً للفصل، كل الأسباب التالية تُعتبر من الدواعي الرئيسية للتحول إلى الإدارة الإلكترونية ما عدا سبب واحد:",
+                options: [
+                    "تزايد تكلفة الإجراءات والمعاملات المعقدة وتأثيرها المالي",
+                    "ضرورة توحيد البيانات على مستوى المؤسسة وتوفيرها للعاملين بشكل متداول",
+                    "الرغبة في زيادة تغلغل الروتين البيروقراطي والمركزية المطلقة في اتخاذ القرارات",
+                    "ازدياد المنافسة بين المؤسسات وضرورة وجود آليات التميز"
+                ],
+                correctAnswer: "الرغبة في زيادة تغلغل الروتين البيروقراطي والمركزية المطلقة في اتخاذ القرارات",
+                explanation: "الإدارة الإلكترونية تسعى للقضاء على البيروقراطية بمفهومها الجامد والحد من الروتين والمركزية وتسهيل الأعمال وتبسيطها وليس العكس.",
+                textRef: "الأسباب الداعية للتحول الإلكتروني - ص 26"
+            },
+            {
+                id: 41, chapter: 2, level: 4, type: "mcq", concept: "أهداف الإدارة الإلكترونية وتغيير المفاهيم",
+                question: "من أهداف الإدارة الإلكترونية إجراء تغييرات جذرية في أسلوب العمل اليومي بالمؤسسة. أي من البدائل التالية صحيح بخصوص الاستبدالات المستهدفة؟",
+                options: [
+                    "استخدام البريد الإلكتروني بدلاً من الصادر والوارد، والإجراءات التنفيذية بدلاً من محاضر الاجتماعات، والإنجازات بدلاً من المتابعة الروتينية، وإدارة الملفات بدلاً من مجرد حفظها",
+                    "حفظ الملفات وتكديس الأرشيف الورقي بدلاً من قواعد البيانات الرقمية المفتوحة",
+                    "زيادة تكرار الاجتماعات الشخصية الدورية بدلاً من العمل والاتصال الإلكتروني المستمر والمفتوح",
+                    "توسيع الفجوة والعلاقة المباشرة بين متخذ القرار والعميل لزيادة التأثير الشخصي والمحسوبية"
+                ],
+                correctAnswer: "استخدام البريد الإلكتروني بدلاً من الصادر والوارد، والإجراءات التنفيذية بدلاً من محاضر الاجتماعات، والإنجازات بدلاً من المتابعة الروتينية، وإدارة الملفات بدلاً من مجرد حفظها",
+                explanation: "يركز الفصل على تحولات ملموسة مثل: البريد الإلكتروني كبديل لسجلات الصادر والوارد، والإجراءات التنفيذية الفورية كبديل لمحاضر الاجتماعات، والإنجازات بدلاً من المتابعة، وإدارة الملفات النشطة بدلاً من حفظها وتكديسها بالأرشيف.",
+                textRef: "أهداف الإدارة الإلكترونية - ص 27"
+            },
+            {
+                id: 42, chapter: 2, level: 4, type: "صح وخطأ", concept: "ميزة إلغاء العلاقات الشخصية",
+                question: "صح أم خطأ: تسهم الإدارة الإلكترونية في إلغاء عامل العلاقة المباشرة بين طرفي المعاملة مما يقلل من تأثير العلاقات الشخصية والنفوذ والمحسوبية في إنهاء المعاملات.",
+                options: ["صح", "خطأ"],
+                correctAnswer: "صح",
+                explanation: "نعم، إلغاء عامل العلاقة المباشرة يضمن تقديم خدمة موضوعية وموحدة لجميع المستفيدين دون تأثير للقرابة أو النفوذ أو العلاقات الشخصية للطرفين.",
+                textRef: "أهداف الإدارة الإلكترونية - ص 27"
+            },
+            {
+                id: 43, chapter: 2, level: 4, type: "mcq", concept: "أنماط الإدارة الإلكترونية: التجارة",
+                question: "ما هو 'أول تطبيق فعلي للإدارة الإلكترونية' تاريخياً والذي مهّد للأنماط الأخرى كالحكومة والتعليم والصحة الإلكترونية؟",
+                options: ["الحكومة الإلكترونية G2C", "التجارة الإلكترونية (E-Commerce)", "الصحة الإلكترونية والعمليات عن بعد", "النشر الإلكتروني والبحث العلمي"],
+                correctAnswer: "التجارة الإلكترونية (E-Commerce)",
+                explanation: "يُعد نمط (التجارة الإلكترونية) أول تطبيق حقيقي للإدارة الإلكترونية، حيث أظهر إمكانية تبادل المعلومات والخدمات المالية والتجارية والدفع عبر البطاقات البنكية بنجاح فائق.",
+                textRef: "أنماط الإدارة الإلكترونية (نقطة 2) - ص 30"
+            },
+            {
+                id: 44, chapter: 2, level: 4, type: "أكمل", concept: "عناصر الإدارة الإلكترونية: البرمجيات",
+                question: "تقسم عناصر الإدارة الإلكترونية إلى عتاد وبرمجيات وشبكة اتصالات وصناع معرفة. أي مما يلي يقع تحت مسمى الشق الذهني (Software) للحاسوب؟",
+                options: [
+                    "المكونات المادية الملموسة والشاشات والكابلات وشبكات الألياف الضوئية",
+                    "نظم التشغيل، برامج البريد الإلكتروني، قواعد البيانات، المترجمات والمحولات، وأدوات تدقيق البرمجة",
+                    "القيادات الرقمية وصناع المعرفة ورأس المال الفكري بالمؤسسة",
+                    "الوصلات الإلكترونية الممتدة وشبكة الإنترانت والإكسترانت فقط"
+                ],
+                correctAnswer: "نظم التشغيل، برامج البريد الإلكتروني، قواعد البيانات، المترجمات والمحولات، وأدوات تدقيق البرمجة",
+                explanation: "البرمجيات (Software) تمثل الشق الذهني والفكري للحاسوب وتتضمن نظم التشغيل، برامج الاتصال، قواعد البيانات، أدوات تدقيق البرمجة والمترجمات والمحولات.",
+                textRef: "عناصر الإدارة الإلكترونية - ص 31"
+            },
+            {
+                id: 45, chapter: 2, level: 4, type: "mcq", concept: "صناع المعرفة والمدراء الرقميون",
+                question: "صناع المعرفة والمديرون الرقميون (Knowledge Workers & Digital Leaders) يمثلون قلب عناصر الإدارة الإلكترونية، وينضوون تحت مسمى:",
+                options: ["الأصول غير المستغلة للشركة", "رأس المال الفكري المعرفي للمنظمة", "البرمجيات الشاغرة بمخازن المؤسسة", "العتاد المعالج مادياً بالشركة"],
+                correctAnswer: "رأس المال الفكري المعرفي للمنظمة",
+                explanation: "القيادات الرقمية وصناع المعرفة ومحللي الموارد هم قلب عناصر الإدارة الإلكترونية ويمثلون رأس المال الفكري المعرفي للمنظمة.",
+                textRef: "عناصر الإدارة الإلكترونية - ص 32"
+            },
+            {
+                id: 46, chapter: 2, level: 5, type: "مقارنة", concept: "وظيفة التخطيط الإلكتروني",
+                question: "تختلف طبيعة (التخطيط الإلكتروني) جذرياً عن (التخطيط التقليدي). أي من الجوانب التالية يُحدد هذا الفرق بدقة؟",
+                options: [
+                    "التخطيط الإلكتروني عملية ديناميكية مستمرة وأفقية الاتجاه، تحول التخطيط من المنقطع الزمني إلى المستمر، بعكس التخطيط التقليدي الذي يحدد أهدافاً جامدة للسنة القادمة باتجاه عمودي (أعلى-أسفل)",
+                    "التخطيط التقليدي أكثر مرونة وسرعة وتفاعلية بفضل اعتماده الكامل على النظم الخبيرة والذكاء الاصطناعي",
+                    "التخطيط الإلكتروني يعتمد على عمال الخط الأمامي فقط في العزلة عن تكنولوجيا الحاسب والبرمجيات",
+                    "لا توجد اختلافات جوهرية فكلاهما يركز على عزل الإدارة عن قواعد البيانات والاتصال المباشر"
+                ],
+                correctAnswer: "التخطيط الإلكتروني عملية ديناميكية مستمرة وأفقية الاتجاه، تحول التخطيط من المنقطع الزمني إلى المستمر، بعكس التخطيط التقليدي الذي يحدد أهدافاً جامدة للسنة القادمة باتجاه عمودي (أعلى-أسفل)",
+                explanation: "التخطيط الإلكتروني تخطيط أفقي وتفاعلي ومستمر بفضل تدفق المعلومات الرقمية الدائمة، في حين أن التخطيط التقليدي منقطع زمني وعمودي وجامد الأهداف.",
+                textRef: "وظائف الإدارة الإلكترونية: التخطيط - ص 33"
+            },
+            {
+                id: 47, chapter: 2, level: 5, type: "تحليل", concept: "وظيفة التنظيم الإلكتروني والوحدات المستحدثة",
+                question: "تحت مظلة (التنظيم الإلكتروني)، يتم إجراء تغييرات في الهياكل التنظيمية لتتحول من الشكل الطويل إلى الشكل المفلطح لمواجهة مشكلات البيروقراطية. ما هي أهم الوحدات الإدارية الأساسية المستحدثة التي يتضمنها الهيكل الإلكتروني؟",
+                options: [
+                    "إدارة المخازن الورقية، وإدارة الأرشيف المقفل، وإدارة الحراسة المادية لوحدات المؤسسة",
+                    "إدارة قواعد البيانات والمعرفة والمعلومات إلكترونياً، إدارة الدعم التقني للمستفيد، وإدارة علاقات العملاء إلكترونياً CRM",
+                    "إدارة العلاقات العامة والصحافة المكتوبة ومطبوعات المؤسسة فقط",
+                    "إدارة العقود الورقية والتدقيق البشري واليدوي للمعاملات الصادرة"
+                ],
+                correctAnswer: "إدارة قواعد البيانات والمعرفة والمعلومات إلكترونياً، إدارة الدعم التقني للمستفيد، وإدارة علاقات العملاء إلكترونياً CRM",
+                explanation: "التنظيم الإلكتروني يستحدث وحدات رئيسية لضمان تسييل المعرفة وتداولها، وتتمثل في: قواعد البيانات والمعرفة، الدعم التقني للمستفيدين، وإدارة علاقات العملاء إلكترونياً.",
+                textRef: "وظائف الإدارة الإلكترونية: التنظيم - ص 33 و 34"
+            },
+            {
+                id: 48, chapter: 2, level: 5, type: "سيناريو", concept: "وظيفة التوجيه الإلكتروني وقيادة الذات",
+                question: "موقف تطبيقي: تطلب مدرسة متميزة من منسقي المقررات لديها اتخاذ قرارات فورية وحل المشكلات الطلابية الطارئة بمرونة دون انتظار توجيهات أسبوعية من عميد الكلية. هذا النمط يعبر عن مفهوم 'بروز قيادة الذات (Self-leadership)' لدى الموظفين. ما هي خصائص هؤلاء القادة الذاتيين؟",
+                options: [
+                    "الرغبة في تأجيل وحفظ المهام البسيطة والامتناع عن تطوير المهارات الفنية للحاسوب لعدم الحاجة إليها",
+                    "القدرة على تحفيز وإبقاء أنفسهم مركزين لحل المشاكل، البراعة والبراعة والقدرة على التكيف مع البيئة المتغيرة، والمسؤولية الكاملة عن مساراتهم المهنية وأنشطتهم",
+                    "الاعتماد على التعليمات والأوامر المكتوبة والتسلسل الإداري البيروقراطي كمرجعية وحيدة وحتمية",
+                    "تحييد عنصر التكنولوجيا الرقمية والاعتماد الحصري على الاجتماعات وجلسات العمل المغلقة"
+                ],
+                correctAnswer: "القدرة على تحفيز وإبقاء أنفسهم مركزين لحل المشاكل، البراعة والبراعة والقدرة على التكيف مع البيئة المتغيرة، والمسؤولية الكاملة عن مساراتهم المهنية وأنشطتهم",
+                explanation: "قيادة الذات هي الميزة الأبرز بالتوجيه الإلكتروني، حيث يتسم قادة الذات بالقدرة على تحفيز أنفسهم، والبراعة والتكيف مع البيئة المتغيرة، وتحمل المسؤولية الكاملة عن مساراتهم المهنية.",
+                textRef: "وظائف الإدارة الإلكترونية: التوجيه - ص 35"
+            },
+            {
+                id: 49, chapter: 2, level: 5, type: "تحليل", concept: "الرقابة الإلكترونية: خصائصها الفريدة",
+                question: "تختلف (الرقابة الإلكترونية) عن الرقابة التقليدية في عدة مزايا جوهرية. أي من الخصائص التالية تعبر عن الرقابة الإلكترونية بشكل دقيق؟",
+                options: [
+                    "هي رقابة دورية لاحقة تعتمد على تسليم التقارير المكتوبة يدوياً وتفحص سجلات الحضور والانصراف الورقية بنهاية كل شهر",
+                    "هي رقابة قائمة على الثقة والولاء الإلكتروني، تحقق الرقابة المستمرة (بدلاً من الدورية)، وبالوقت الحقيقي (بدلاً من الماضي)، وبالنقرات (بدلاً من التقارير)، وتقلل المفاجآت الداخلية إلى أدنى حد",
+                    "هي رقابة صارمة عمودية تهدف لإيقاع العقوبات الفورية وتقليل مساحة الحرية الإبداعية لدى الموظف لمنع خرق القواعد الإدارية",
+                    "هي رقابة تقلل ثقة الإدارة بالموظفين وتزيد من المجهود والروتين الإداري المطلوب لتقييد حريتهم"
+                ],
+                correctAnswer: "هي رقابة قائمة على الثقة والولاء الإلكتروني، تحقق الرقابة المستمرة (بدلاً من الدورية)، وبالوقت الحقيقي (بدلاً من الماضي)، وبالنقرات (بدلاً من التقارير)، وتقلل المفاجآت الداخلية إلى أدنى حد",
+                explanation: "الرقابة الإلكترونية تتميز بكونها مستمرة، آنية بالوقت الحقيقي، تتم بالنقرات الفورية بدلاً من الأوراق والتقارير الدورية اللاحقة، وتركز بشدة على بناء الثقة الإلكترونية والحد من الأزمات.",
+                textRef: "وظائف الإدارة الإلكترونية: الرقابة - ص 36"
+            },
+            {
+                id: 50, chapter: 2, level: 5, type: "سيناريو/خدعة", concept: "الرقابة الإلكترونية بالنتاجات",
+                question: "موقف تطبيقي: قررت وزارة التعليم العالي مراقبة أداء أعضاء هيئة التدريس بناءً على جودة مخرجات التعلم وأوراق البحوث المنشورة ومستوى استيعاب الطلاب ومشاريعهم العملية، مع منحهم المرونة الكاملة في تحديد ساعات حضورهم ومكان تقديم محاضراتهم الإلكترونية. هذا التوجه في الرقابة يمثل تحولاً نحو:",
+                options: [
+                    "الرقابة بالمدخلات وعمليات الأنشطة التفصيلية",
+                    "الرقابة بالنتاجات / الرقابة بالنتائج والتقليل من أهمية الرقابة القائمة على تتبع الأنشطة أو المدخلات",
+                    "البيروقراطية المطلقة وتشديد الرقابة اللحظية على الحضور الجسدي والروتين الإداري المعقد",
+                    "التخلي الكامل عن جودة العملية التعليمية وإلغاء الرقابة والتقويم"
+                ],
+                correctAnswer: "الرقابة بالنتاجات / الرقابة بالنتائج والتقليل من أهمية الرقابة القائمة على تتبع الأنشطة أو المدخلات",
+                explanation: "مع الوقت وفي ظل الإدارة الإلكترونية يتقلص التركيز على رقابة المدخلات والعمليات لصالح الرقابة بالنتاجات (النتائج والمخرجات الحقيقية للمؤسسة).",
+                textRef: "وظائف الإدارة الإلكترونية: الرقابة - ص 36"
+            },
+
+            // ========== الفصل الثالث: تطبيق الإدارة الإلكترونية (ص 37 - 60) ==========
+            {
+                id: 51, chapter: 3, level: 1, type: "مصطلح", concept: "تعريف البنية التحتية",
+                question: "اختر المصطلح المناسب: يقصد بها تأمين الجانب المحسوس المادي في الإدارة الإلكترونية مثل أجهزة الحاسب الآلي والشبكات الحاسوبية السريعة ووسائل الاتصال الحديثة.",
+                options: ["التشريعات القانونية والآثار المترتبة", "البنية التحتية للإدارة الإلكترونية", "إعادة هندسة العمليات والأنشطة", "الخطة التسويقية الدعاية الشاملة"],
+                correctAnswer: "البنية التحتية للإدارة الإلكترونية",
+                explanation: "يقصد بالبنية التحتية الجانب المحسوس المادي اللازم للتحول للإدارة الإلكترونية مثل الحواسيب والأجهزة المرفقة وتأمين الشبكات السريعة ووسائل الاتصال الحديثة.",
+                textRef: "مراحل التحول إلى الإدارة الإلكترونية - ص 38"
+            },
+            {
+                id: 52, chapter: 3, level: 1, type: "صح وخطأ", concept: "العنصر البشري كأبرز ركيزة للتحول",
+                question: "صح أم خطأ: يعتبر 'الموظف' هو العنصر الأساسي للتحول إلى الإدارة الإلكترونية، لذا لا بد من تدريبه وتأهيله عبر دورات متخصصة أو على رأس العمل.",
+                options: ["صح", "خطأ"],
+                correctAnswer: "صح",
+                explanation: "الموظف هو العنصر الأساسي للتحول إلى الإدارة الإلكترونية، ويتطلب ذلك إعداد برامج تدريبية وتأهلية مكثفة لتمكينه من استخدام التكنولوجيا المتاحة بكفاءة.",
+                textRef: "مراحل التحول إلى الإدارة الإلكترونية - ص 38"
+            },
+            {
+                id: 53, chapter: 3, level: 1, type: "أكمل", concept: "تأثير البيئة المحيطة بالمشروع",
+                question: "أكمل الفراغ: شأن مشروع الإدارة الإلكترونية شأن أي مشروع آخر، فالإدارة هي ........ تؤثر وتتأثر بكافة عناصر البيئة المحيطة السياسية والاقتصادية والاجتماعية والثقافية والتكنولوجية.",
+                options: ["ابنة بيئتها", "كيان مستقل تماماً", "أداة تكنولوجية بحتة", "وظيفة آلية منقطعة"],
+                correctAnswer: "ابنة بيئتها",
+                explanation: "تعتبر الإدارة 'ابنة بيئتها'؛ حيث تؤثر وتتأثر بكافة الظروف المحيطة بها وتتفاعل مع العناصر السياسية والاقتصادية والاجتماعية والثقافية والتكنولوجية المحيطة بها.",
+                textRef: "متطلبات مشروع الإدارة الإلكترونية - ص 40"
+            },
+            {
+                id: 54, chapter: 3, level: 1, type: "mcq", concept: "شعار الإدارة الإلكترونية والهدف العظيم",
+                question: "أي من المزايا التالية تُعد الهدف والشعار الأساسي الذي تسعى الإدارة الإلكترونية لتحقيقه بشكل شامل في نهاية الفصل الثالث؟",
+                options: ["إدارة بجهد مضاعف وتكلفة باهظة وأوراق كثيرة", "إدارة بلا ورق وبلا زمان وبلا مكان", "إدارة مركزية تعتمد بالكامل على الإدارة الوسطى وتتبع الأنشطة", "إدارة تقليدية تعزل الموظفين وتتمسك بالسلطة الرسمية"],
+                correctAnswer: "إدارة بلا ورق وبلا زمان وبلا مكان",
+                explanation: "الهدف والغاية العظمى للإدارة الإلكترونية يتمثل في تفعيل شعار: 'إدارة بلا ورق وبلا زمان وبلا مكان'، تيسيراً للخدمات وتقليلاً للهدر والكلفة والوقت.",
+                textRef: "متطلبات الإدارة الإلكترونية وأهدافها - ص 60"
+            },
+            {
+                id: 55, chapter: 3, level: 1, type: "صح وخطأ", concept: "أولوية برمجة المعاملات المنتشرة",
+                question: "صح أم خطأ: في مراحل التحول للإدارة الإلكترونية، يُنصح بالبدء ببرمجة المعاملات الأقل انتشاراً في الأقسام لتجربتها قبل تطبيقها على المعاملات الشائعة.",
+                options: ["صح", "خطأ"],
+                correctAnswer: "خطأ",
+                explanation: "العبارة خاطئة. من مراحل التحول الفعالة البدء بالمعاملات الورقية (الأكثر انتشاراً) في جميع الأقسام بلا استثناء لبرمجتها لتقليل الهدر في استخدام الورق، مثل نموذج طلب الإجازة.",
+                textRef: "مراحل التحول إلى الإدارة الإلكترونية - ص 39"
+            },
+            {
+                id: 56, chapter: 3, level: 2, type: "mcq", concept: "الخطة التسويقية الدعاية والتوعية",
+                question: "من متطلبات مشروع الإدارة الإلكترونية تفعيل 'الخطة التسويقية الدعائية الشاملة'. ما هي الوسائل القومية الموصى باستخدامها لتهيئة مناخ شعبي يتقبل الفكرة؟",
+                options: ["المنشورات الورقية الموزعة يدوياً فقط", "مشاركة الإذاعة والتلفزيون والصحف وإقامة الندوات واستضافة المسؤولين والوزراء في حلقات نقاش", "الاعتماد الحصري على الرسائل النصية القصيرة المبرمجة", "تقليص التواصل الدعائي وترك المواطنين يكتشفون الأنظمة بأنفسهم"],
+                correctAnswer: "مشاركة الإذاعة والتلفزيون والصحف وإقامة الندوات واستضافة المسؤولين والوزراء في حلقات نقاش",
+                explanation: "الخطة التسويقية تتطلب مشاركة جميع وسائل الإعلام الوطنية من إذاعة وتلفزيون وصحف، وإقامة الندوات واستضافة الوزراء والمسؤولين في حلقات نقاش لتهيئة مناخ شعبي يتقبل الفكرة ويتفاعل معها.",
+                textRef: "متطلبات مشروع الإدارة الإلكترونية - ص 41-42"
+            },
+            {
+                id: 57, chapter: 3, level: 2, type: "mcq", concept: "توحيد المعايير والواجهات الفنية",
+                question: "لتبسيط وتسهيل استخدام التقنية للمواطنين والحد من الغموض، يشدد الفصل على بعض العناصر الفنية الجوهرية لخدمة المواطن، ومنها:",
+                options: ["توحيد أشكال المواقع الحكومية وإنشاء موقع شامل كدليل لعناوين جميع المراكز والإدارات الحكومية في البلاد", "جعل كل إدارة تصمم موقعها بشكل منفصل ومغاير تماماً لإبراز تميزها", "إخفاء عناوين المراكز الحكومية لضمان السرية والأمن الإلكتروني من التسلل", "زيادة التعقيد الفني والخطوات البرمجية لمنع المستخدمين العاديين من الولوج"],
+                correctAnswer: "توحيد أشكال المواقع الحكومية وإنشاء موقع شامل كدليل لعناوين جميع المراكز والإدارات الحكومية في البلاد",
+                explanation: "من العناصر الفنية المساعدة: توحيد أشكال المواقع الحكومية بما يتناسب مع ثقافة المواطنين، وتوحيد طرق استخدامها، وإنشاء موقع شامل كدليل لعناوين جميع المراكز والإدارات الحكومية في البلاد لتبسيط الوصول.",
+                textRef: "متطلبات مشروع الإدارة الإلكترونية - ص 42"
+            },
+            {
+                id: 58, chapter: 3, level: 2, type: "mcq", concept: "توفير التمويل المالي الكافي والمستمر",
+                question: "أي مما يلي يُعد من المتطلبات المالية الجوهرية لضمان استمرار ونجاح مشروع الإدارة الإلكترونية وتفادي تعثره مستقبلاً؟",
+                options: ["تخصيص تمويل لمرة واحدة فقط عند شراء الأجهزة المادية", "توفير التمويل المستمر لإجراء الصيانة الدورية وتدريب الكوادر ومواكبة التطورات التكنولوجية العالمية", "الاعتماد الكامل على تبرعات القطاع الخاص والمستفيدين والعملاء", "إلغاء ميزانية التدريب والصيانة السنوية لتقليص النفقات المالية والوفورات"],
+                correctAnswer: "توفير التمويل المستمر لإجراء الصيانة الدورية وتدريب الكوادر ومواكبة التطورات التكنولوجية العالمية",
+                explanation: "يحتاج المشروع إلى تمويل مالي مستمر ومناسب يُمكّن الحكومة من إجراء صيانة دورية، تدريب الكوادر والموظفين باستمرار، ومواكبة أي تطور تكنولوجي عالمي في هذا المجال لتقليل تعثر الأنظمة.",
+                textRef: "متطلبات مشروع الإدارة الإلكترونية - ص 40-41"
+            },
+            {
+                id: 59, chapter: 3, level: 2, type: "صح وخطأ", concept: "الفرق بين الإنترانت والإكسترانت",
+                question: "صح أم خطأ: يعرّف الفصل شبكة 'الإنترانت' (Intranet) بأنها الشبكة التي تربط المؤسسة بموردي المواد الخام والموزعين والعملاء الخارجيين مع الحفاظ على سرية ملفاتهم.",
+                options: ["صح", "خطأ"],
+                correctAnswer: "خطأ",
+                explanation: "العبارة خاطئة. التعريف المذكور هو لشبكة الإكسترانت (Extranet). أما الإنترانت فهي الشبكة الخاصة بالمنظمة وتُصمّم تلبية لاحتياجات العاملين في المنظمة باستخدام تكنولوجيا الإنترنت والويب لرفع كفاءة العمل الإداري الداخلي ومشاركة الموارد.",
+                textRef: "المتطلبات التقنية وشبكات الاتصال - ص 49-50"
+            },
+            {
+                id: 60, chapter: 3, level: 2, type: "mcq", concept: "تأهيل وتفويض وتمكين الموظفين",
+                question: "من المتطلبات البشرية لتطبيق الإدارة الإلكترونية تحقيق 'التمكين الإداري للأفراد' (Empowerment). ما الهدف الرئيسي منه في البيئة التكنولوجية؟",
+                options: ["إجبار الموظفين على تنفيذ الأوامر بدقة تامة دون نقاش ومنع الابتكار", "إتاحة الفرصة للأفراد للتعامل السريع والتعاطي مع المتغيرات البيئية والتكنولوجية في الخطوط الأمامية", "تقليص رواتب الموظفين مع زيادة ساعات العمل والمهام المعقدة", "منع الموظفين من التفاعل مع الأنظمة الرقمية مباشرة لسلامتها"],
+                correctAnswer: "إتاحة الفرصة للأفراد للتعامل السريع والتعاطي مع المتغيرات البيئية والتكنولوجية في الخطوط الأمامية",
+                explanation: "التمكين الإداري يهدف إلى إعطاء المرونة والقدرة للأفراد في الخط الأمامي للتعامل السريع والاستجابة الفعالة مع المتغيرات البيئية والتكنولوجية المتسارعة بالتمكين الذاتي.",
+                textRef: "المتطلبات البشرية وتأهيل الكوادر - ص 51"
+            },
+            {
+                id: 61, chapter: 3, level: 3, type: "مقارنة", concept: "مقارنة البنية الشبكية للمؤسسة",
+                question: "قارن بين شبكتي 'الإنترانت' و 'الإكسترانت' من حيث الفئة المستهدفة ونطاق العمل وفقاً للتقنيات الواردة بالفصل:",
+                options: [
+                    "الإنترانت مخصصة لتلبية الاحتياجات الداخلية للعاملين بالمنظمة، بينما الإكسترانت تربط الإنترانت المحلية للشركة مع العملاء والشركاء والموردين المتباعدين جغرافياً",
+                    "الإنترانت موجهة للجمهور الخارجي العام عبر الإنترنت، بينما الإكسترانت مخصصة فقط لأجهزة الاستخبارات العسكرية",
+                    "الإنترانت تعتمد بالكامل على الأوراق والمستندات، بينما الإكسترانت تعتمد على الفاكس التقليدي",
+                    "لا توجد فروق تقنية أو تنظيمية بينهما فكلاهما يخدم نفس الموظفين داخلياً فقط"
+                ],
+                correctAnswer: "الإنترانت مخصصة لتلبية الاحتياجات الداخلية للعاملين بالمنظمة، بينما الإكسترانت تربط الإنترانت المحلية للشركة مع العملاء والشركاء والموردين المتباعدين جغرافياً",
+                explanation: "الإنترانت هي شبكة داخلية خاصة بالمنظمة لتلبية احتياجات عامليها ومشاركة معلوماتها، أما الإكسترانت فهي تربط شبكات الإنترانت المحلية للشركات مع مراكز الأبحاث والموردين والعملاء المتباعدين جغرافياً مع الحفاظ على الخصوصية والسرية.",
+                textRef: "المتطلبات التقنية وشبكات الاتصال - ص 49-50"
+            },
+            {
+                id: 62, chapter: 3, level: 3, type: "mcq", concept: "الخطوات العلمية والعملية للمشروع",
+                question: "لإنشاء مشروع الإدارة الإلكترونية بالمنظمة، ما هي الخطوة الأولى الإلزامية التي يجب القيام بها برمجياً وتنظيمياً لدراسة واقع الإدارة وتحديد البدائل؟",
+                options: ["وضع خطة التنفيذ الفورية وتوزيع الميزانية للبدء فوراً", "تحديد المسؤوليات والجهات الممولة للمشروع بشكل عاجل", "إعداد الدراسة الأولية بتشكيل فريق عمل يضم متخصصين لمعرفة واقع الإدارة وتحديد البدائل مالياً وفنياً وبشرياً وعرضها على الإدارة العليا", "شراء أحدث أجهزة الحواسيب بالأسواق فوراً دون دراسة واقعية"],
+                correctAnswer: "إعداد الدراسة الأولية بتشكيل فريق عمل يضم متخصصين لمعرفة واقع الإدارة وتحديد البدائل مالياً وفنياً وبشرياً وعرضها على الإدارة العليا",
+                explanation: "الخطوة الأولى تتمثل في 'إعداد الدراسة الأولية'؛ وتتطلب تشكيل فريق عمل يضم متخصصين لمعرفة واقع الإدارة وتحديد البدائل من كافة النواحي المالية والفنية والبشرية، ووضع الخيارات على بينة أمام الإدارة العليا.",
+                textRef: "خطوات تطبيق الإدارة الإلكترونية - ص 43"
+            },
+            {
+                id: 63, chapter: 3, level: 3, type: "mcq", concept: "أرقام دراسات الحالة في الرقمنة والأرشفة",
+                question: "يذكر الفصل مثالاً تطبيقياً بالأرقام لجهة حكومية قامت بالبدء بتوثيق معاملاتها القديمة إلكترونياً. ما هي هذه الأرقام الدالة على حجم التحول؟",
+                options: [
+                    "تحويل 5 ملايين مستند ورقي إلى 200 مستند إلكتروني",
+                    "جهة حكومية لديها أكثر من (40) مليون مستند ورقي تم تحويل 70 مستند ورقي تقريباً إلى مستند إلكتروني",
+                    "تحويل 100% من المستندات في غضون أسبوع واحد بجهود العاملين فقط",
+                    "تحويل 10 ملايين مستند إلى سجلات يدوية ميكروفيلمية"
+                ],
+                correctAnswer: "جهة حكومية لديها أكثر من (40) مليون مستند ورقي تم تحويل 70 مستند ورقي تقريباً إلى مستند إلكتروني",
+                explanation: "الرقم الوارد في الفصل كدراسة حالة لرقمنة الأرشيف الورقي القديم هو: 'إحدى الجهات الحكومية لديها أكثر من (40) مليون مستند ورقي تم تحويل 70 ورقي تقريباً إلى مستند إلكتروني (تم الاحتفاظ به بدقة تامة كما ورد في نص الكتاب بسبب التقارب المطبعي للرقم في كتاب المادة).'",
+                textRef: "مراحل التحول إلى الإدارة الإلكترونية - ص 38-39"
+            },
+            {
+                id: 64, chapter: 3, level: 3, type: "mcq", concept: "خصائص واجهة الشبكة العالمية WWW",
+                question: "تعد شبكة الويب العالمية (World Wide Web) من أكثر استخدامات الإنترنت فعالية. ما هي السمة التقنية التي تزود بها المستخدمين لتسهيل تصفح المعلومات؟",
+                options: ["تعتمد على لغات برمجة معقدة ومخفية عن العامة", "تزود المستخدمين بواجهة بسيطة، قياسية وثابتة لنطاق واسع من المعلومات المتنوعة والوسائط المتعددة والرسوم", "تمنع عرض الصور والرسوم البيانية لحماية سرية البيانات", "تتطلب الاتصال اليدوي الهاتفي المباشر بكل موقع حكومي على حدة"],
+                correctAnswer: "تزود المستخدمين بواجهة بسيطة، قياسية وثابتة لنطاق واسع من المعلومات المتنوعة والوسائط المتعددة والرسوم",
+                explanation: "تعتبر شبكة الويب العالمية واجهة تصفح قياسية تزود المستخدم بواجهة بسيطة وسهلة الاستخدام للوصول لنطاق واسع وثابت من المعلومات المتنوعة المتضمنة الوسائط والرسوم.",
+                textRef: "المتطلبات التقنية وخدمات الإنترنت - ص 48"
+            },
+            {
+                id: 65, chapter: 3, level: 3, type: "صح وخطأ", concept: "أمن المعلومات وتبادل الشبكات المشتركة",
+                question: "صح أم خطأ: على الرغم من التسهيلات الكبيرة التي تقدمها شبكة 'الإكسترانت' للشركات في تخفيض التكاليف والتواصل مع الموردين، إلا أن الثمن الباهظ كان المخاطرة ببعض 'أمن المعلومات'.",
+                options: ["صح", "خطأ"],
+                correctAnswer: "صح",
+                explanation: "بالفعل، يذكر الفصل أن تكنولوجيا الإكسترانت تتيح للشركات التعامل المتميز والسهل مع موردي المواد الخام والموزعين والعملاء بكلفة منخفضة، إلا أن الثمن كان المخاطرة ببعض أمن المعلومات في هذه البيئة المشتركة.",
+                textRef: "المتطلبات التقنية وشبكة الإكسترانت - ص 50"
+            },
+            {
+                id: 66, chapter: 3, level: 4, type: "mcq", concept: "المتطلبات التنظيمية وإعادة الهيكلة",
+                question: "يتطلب تطبيق الإدارة الإلكترونية تلبية 'المتطلبات التنظيمية' الفرعية. أي مما يلي يمثل هذه المتطلبات بدقة لتبسيط النظام وجعله متمشياً مع التحول الرقمي؟",
+                options: [
+                    "تحديد درجة مساهمة كل عملية في الأهداف، استيعاب العمليات غير الضرورية لتبسيط النظام، إضافة العمليات الداعمة للتحول، وتوفير المرونة الكافية للنظام",
+                    "الحفاظ على جميع العمليات الروتينية والبيروقراطية القديمة دون أي تغيير لمنع حدوث بلبلة لدى الموظفين",
+                    "تحويل الهيكل التنظيمي الشبكي إلى هيكل ساكن وجامد لحصر المسؤوليات الفردية للموظفين",
+                    "التركيز الحصري على المدخلات المادية للعملية الإدارية وتجاهل النتاجات والمخرجات النهائية"
+                ],
+                correctAnswer: "تحديد درجة مساهمة كل عملية في الأهداف، استيعاب العمليات غير الضرورية لتبسيط النظام، إضافة العمليات الداعمة للتحول، وتوفير المرونة الكافية للنظام",
+                explanation: "المتطلبات التنظيمية الفرعية تشمل: تحديد مساهمة كل عملية في الأهداف، استيعاب العمليات غير الضرورية لتبسيط النظام وجعله متمشياً مع التحول، إضافة عمليات جديدة تدعم التحول الرقمي، وتوفير القدر الكافي من المرونة.",
+                textRef: "المتطلبات التنظيمية لتطبيق الإدارة الإلكترونية - ص 45"
+            },
+            {
+                id: 67, chapter: 3, level: 4, type: "mcq", concept: "العمليات التنظيمية لتفادي الارتجال",
+                question: "لضمان نجاح التحول إلى الإدارة الإلكترونية داخل المؤسسة، ما هو الإجراء الموصى به لمعالجة 'التطوير المستمر لإجراءات العمل'؟",
+                options: ["الاعتماد على التعليمات اللفظية والارتجال اليومي لمعالجة الطوارئ", "توضيح الإجراءات للموظفين مع التأكيد على تدوينها وتصنيفها وفهم أهدافها لتفادي الاتكالية والارتجالية", "إبقاء الإجراءات الإدارية سرية ومبهمة لحمايتها من التجسس الإلكتروني", "زيادة عدد الأوراق والمستندات الصادرة لتوثيق كل خطوة يدوياً"],
+                correctAnswer: "توضيح الإجراءات للموظفين مع التأكيد على تدوينها وتصنيفها وفهم أهدافها لتفادي الاتكالية والارتجالية",
+                explanation: "من عوامل النجاح الأساسية: التطوير المستمر لإجراءات العمل، ومحاولة توضيحها للموظفين لضمان استيعابها، مع التأكيد على تدوينها وتصنيفها وفهم أهدافها للبعد عن الاتكالية والارتجال.",
+                textRef: "عوامل النجاح في الإدارة الإلكترونية - ص 57"
+            },
+            {
+                id: 68, chapter: 3, level: 4, type: "mcq", concept: "الصدارة في التجارب الإقليمية والعربية",
+                question: "في ميدان التجارب العالمية الناجحة لتطبيق الإدارة الإلكترونية، ما هي الدولة التي صُنفت 'أولاً' عالمياً، وما هي الدولة التي صُنفت 'أولاً' على مستوى الدول العربية؟",
+                options: ["ألمانيا أولاً عالمياً، والمملكة العربية السعودية أولاً عربياً", "الولايات المتحدة الأمريكية أولاً عالمياً، ودولة الإمارات العربية المتحدة أولاً عربياً", "كندا أولاً عالمياً، وفلسطين أولاً عربياً", "فرنسا أولاً عالمياً، ودولة الكويت أولاً عربياً"],
+                correctAnswer: "الولايات المتحدة الأمريكية أولاً عالمياً، ودولة الإمارات العربية المتحدة أولاً عربياً",
+                explanation: "التجارب العالمية الأفضل بدأت بالولايات المتحدة الأمريكية أولاً، يليها الاتحاد الأوروبي، بينما في الدول العربية تأتي في الصدارة تجربة دولة الإمارات العربية المتحدة كأفضل تجربة تليها السعودية والكويت.",
+                textRef: "التجارب العالمية والعربية في ميدان الإدارة الإلكترونية - ص 57-58"
+            },
+            {
+                id: 69, chapter: 3, level: 4, type: "mcq", concept: "خصوصية التجربة الفلسطينية مع الاحتلال",
+                question: "حققت دولة فلسطين تجربة نجاح فريدة ومميزة وصفت بأنها 'مضحك مبكي'. كيف استطاعت فلسطين كسر الحصار الإسرائيلي المستمر عبر تطبيقات الإدارة الإلكترونية بنهاية عام 2008؟",
+                options: [
+                    "عبر تأهيل الكوادر البشرية فنياً وتحقيق استثمارات واسعة في قطاع النقل تجاوزت 3 مليارات دولار في القطاعين العام والخاص في نهاية 2008",
+                    "عن طريق التوقف الكامل عن استخدام أجهزة الحاسب والاعتماد الحصري على الأرشيف الورقي المحلي",
+                    "عن طريق استيراد برمجيات حماية ومعدات أجنبية بالكامل دون فحص استقلاليتها الأمنية",
+                    "بإلغاء الإطار القانوني والتنظيمي للتحول الرقمي لمنع الرقابة الخارجية"
+                ],
+                correctAnswer: "عبر تأهيل الكوادر البشرية فنياً وتحقيق استثمارات واسعة في قطاع النقل تجاوزت 3 مليارات دولار في القطاعين العام والخاص في نهاية 2008",
+                explanation: "استطاعت فلسطين بالرغم من الاحتلال تطبيق الإدارة الإلكترونية في مجالات واسعة كسرت بها الحصار، ومن أمثلتها تأهيل كوادرها الفنية وتحقيق استثمارات واسعة بقطاع النقل تجاوزت 3 مليارات دولار بالقطاعين العام والخاص نهاية عام 2008.",
+                textRef: "التجارب العالمية والعربية - فلسطين - ص 58"
+            },
+            {
+                id: 70, chapter: 3, level: 4, type: "mcq", concept: "تأثير التقنية على المهارات اللغوية",
+                question: "يؤكد الفصل على ضرورة رفع مهارات الموظفين في 'اللغة الإنجليزية' كمتطلب أساسي للتحول للإدارة الإلكترونية. ما هو التعليل العلمي والعملي المذكور لذلك؟",
+                options: ["لتمكينهم من السفر للعمل بالخارج في الدول الغربية الرائدة التكنولوجية", "لأنهم سوف يتعاملون مع تكنولوجيا متطورة يتطلب استخدامها اللغة الإنجليزية", "لكي يتمكنوا من التحدث مع المستفيدين الأجانب والموردين بشكل يومي باللغة الإنجليزية", "لأن اللوائح الإدارية والقوانين المحلية ستُصاغ بالكامل باللغة الإنجليزية مستقبلاً"],
+                correctAnswer: "لأنهم سوف يتعاملون مع تكنولوجيا متطورة يتطلب استخدامها اللغة الإنجليزية",
+                explanation: "رفع مهارات الموظفين باللغة الإنجليزية ضرورة حتمية للتحول للإدارة الإلكترونية لأنهم سيتعاملون مع برمجيات وتقنيات متطورة ومستجدة يتطلب استخدامها بالضرورة إجادة اللغة الإنجليزية.",
+                textRef: "متطلبات تطبيق الإدارة الإلكترونية - ص 60"
+            },
+            {
+                id: 71, chapter: 3, level: 5, type: "سيناريو", concept: "مخاطر التبعية للخارج وأثر التجسس",
+                question: "موقف تطبيقي: قررت إحدى المؤسسات الكبرى تطبيق مشروع الإدارة الإلكترونية فاستعانت بأنظمة وبرمجيات حماية مستوردة بالكامل من الخارج دون إخضاعها لأية اختبارات مكثفة أو دراسات أمنية محلية. ما هي السلبية المحتملة والخطيرة التي تقع فيها هذه المؤسسة وفقاً لدوائر التحليل المذكورة بالفصل؟",
+                options: [
+                    "زيادة الهدر المالي الداخلي بسبب عدم توفير الكوادر البشرية للبرمجة",
+                    "تعريض أمن معلومات شبكاتها الرسمية للخطر وزيادة التبعية للخارج ووضع أرشيفها القومي تحت سيطرة جهات أجنبية تتجسس عليها",
+                    "انخفاض دقة وموثوقية المعاملات الورقية الصادرة والواردة",
+                    "فشل الموظفين في استخدام اللغة الإنجليزية بشكل ملموس في تعاملاتهم اليومية"
+                ],
+                correctAnswer: "تعريض أمن معلومات شبكاتها الرسمية للخطر وزيادة التبعية للخارج ووضع أرشيفها القومي تحت سيطرة جهات أجنبية تتجسس عليها",
+                explanation: "الاعتماد الكلي على تقنيات أجنبية مستوردة دون فحص استقلاليتها أو ملاءمتها للأمن القومي يعرض أمن معلومات شبكات المؤسسات والدول للخطر ويزيد من مظاهر التبعية ويضع الوثائق والأرشيف تحت سيطرة دول أخرى تتجسس عليها.",
+                textRef: "السلبيات المحتملة لتطبيق مشروع الإدارة الإلكترونية - ص 54"
+            },
+            {
+                id: 72, chapter: 3, level: 5, type: "mcq", concept: "تصنيف فئات التسلل والخرق الأمني",
+                question: "يذكر الفصل خطورة 'التجسس الإلكتروني' وتأثيره على الأمن القومي، ويصنف مصادر هذا الخطر إلى ثلاث فئات. ما هي الفئة التي تمثل التهديد الأكثر خطورة واستراتيجية لسيادة الدولة؟",
+                options: [
+                    "الفئة الأولى: الأفراد العاديون الساعون لتخريب واجهة الموقع فقط", 
+                    "الفئة الثانية: الهاكرز (القراصنة) الذين يعيقون عمل الموقع لفترة محدودة", 
+                    "أجهزة الاستخبارات العالمية للدول والتي تطلع على كامل الوثائق الحكومية وتصورها وتسربها لجهات معادية", 
+                    "الفئة الرابعة: الموظفون الغاضبون والمقاومون للتغيير الإداري الداخلي"
+                ],
+                correctAnswer: "أجهزة الاستخبارات العالمية للدول والتي تطلع على كامل الوثائق الحكومية وتصورها وتسربها لجهات معادية",
+                explanation: "الفئتان الأولى والثانية (أفراد عاديون وهاكرز) خطرهما محدود بتعطيل عمل الموقع ويمكن تلافيه بنسخ احتياطية، أما الخطر الاستراتيجي الأكبر يكمن في الفئة الثالثة (أجهزة الاستخبارات العالمية للدول) التي تتطلع على الوثائق الحكومية والشركات وتنقلها وتصورها وتسربها لجهات معادية مما يهدد الأمن القومي.",
+                textRef: "السلبيات المحتملة - فئات التجسس - ص 53-54"
+            },
+            {
+                id: 73, chapter: 3, level: 5, type: "سيناريو", concept: "معوقات تبسيط الإجراءات الحكومية",
+                question: "موقف تطبيقي: عند محاولة تطبيق الإدارة الإلكترونية في إحدى المصالح الحكومية، أبدى الموظفون القدامى مقاومة شرسة للمشروع ورفضوا تداول المعاملات إلكترونياً خوفاً على وظائفهم ومستقبلهم المهني. أي من معوقات تطبيق الإدارة الإلكترونية يمثل هذا الموقف؟",
+                options: [
+                    "التخبط السياسي الذي يؤدي لمقاطعة المبادرة",
+                    "مقاومة هامة للتغيير من قبل الموظفين الحكوميين الذين يخشون على مستقبل عملهم بعد تبسيط الإجراءات وتنظيم العمليات الحكومية",
+                    "الكوارث الوطنية والنزاعات الإقليمية المؤثرة على البنية التحتية",
+                    "الرسية الضبابية للإدارة الإلكترونية وعدم استيعاب أهدافها الاستراتيجية"
+                ],
+                correctAnswer: "مقاومة هامة للتغيير من قبل الموظفين الحكوميين الذين يخشون على مستقبل عملهم بعد تبسيط الإجراءات وتنظيم العمليات الحكومية",
+                explanation: "من أهم المعوقات مقاومة التغيير من الموظفين الحكوميين خوفاً على مستقبلهم المهني بعد حوسبة العمليات وتبسيط الإجراءات مما يهدد استقرار مراكزهم البيروقراطية التقليدية.",
+                textRef: "معوقات تطبيق الإدارة الإلكترونية (نقطة 5) - ص 56"
+            },
+            {
+                id: 74, chapter: 3, level: 5, type: "mcq", concept: "التغير في الهياكل والمستويات الإدارية",
+                question: "كيف تؤثر الإدارة الإلكترونية على 'الهيكل التنظيمي والمستويات الإدارية' للشركات والمؤسسات التعليمية عند تطبيقها بشكل سليم؟",
+                options: [
+                    "تؤدي إلى زيادة تغلغل الإدارة الوسطى وزيادة تعقيد المستويات الإدارية وتضخيم العمالة الكتابية",
+                    "إحلال هيكل شبكي متحرك ومتغير محل الهيكل الساكن الجامد، وتسطيح المنظمة، وتقليص حجم الوظائف والمستويات الإدارية وتقليل الاعتماد على الإدارة الوسطى والعمالة الكتابية",
+                    "تحويل الاتصال بالكامل إلى اتصال عمودي أحادي الاتجاه (من الأعلى للأسفل) فقط",
+                    "زيادة استقرار وجثوم الهياكل البيروقراطية القديمة وجعلها أكثر حصانة ضد التغيير"
+                ],
+                correctAnswer: "إحلال هيكل شبكي متحرك ومتغير محل الهيكل الساكن الجامد، وتسطيح المنظمة، وتقليص حجم الوظائف والمستويات الإدارية وتقليل الاعتماد على الإدارة الوسطى والعمالة الكتابية",
+                explanation: "التحول للإدارة الإلكترونية يؤدي إلى استبدال الهيكل التقليدي الساكن بهيكل شبكي مرن ومتحرك، ويجعل المنظمة أكثر تسطيحاً وتماسكاً، ويقلص حجم المستويات الإدارية والاعتماد على الإدارة الوسطى والوظائف الكتابية لمرونة أعلى.",
+                textRef: "الآثار التنظيمية والإدارية المترتبة على الإدارة الإلكترونية - ص 58"
+            },
+            {
+                id: 75, chapter: 3, level: 5, type: "سيناريو", concept: "التغير في الفئة المهنية للعمالة",
+                question: "موقف تطبيقي: لاحظ المدير العام لجامعة إلكترونية أن عملية التحول الرقمي أدت إلى تراجع دور الكتبة والموظفين المسؤولين عن تصوير المستندات والأوراق يدوياً، بينما ازداد الطلب على المبرمجين ومحللي البيانات وصناع المحتوى. هذا يمثل تحولاً ملموساً في نوعية العاملين من:",
+                options: [
+                    "عمال المعرفة (Knowledge Workers) إلى عمال كتابيين تقليديين",
+                    "عمال كتابيين تقليديين إلى عمال معرفة (Knowledge Workers) وتغيراً نوعياً",
+                    "عمال ميكانيكيين إلى عمال فنيين في الطباعة الورقية",
+                    "إدارة وسطى ساكنة إلى عمال خطوط أمامية معزولين عن الشبكة"
+                ],
+                correctAnswer: "عمال كتابيين تقليديين إلى عمال معرفة (Knowledge Workers) وتغيراً نوعياً",
+                explanation: "يؤدي التحول الإلكتروني إلى تغير نوعي في فئات العاملين بالمؤسسات، حيث يتحولون من مجرد عمالة كتابية تقوم بنقل وحفظ المستندات ورقياً إلى عمال معرفة (Knowledge Workers) يديرون ويصنعون المعرفة والبيانات الرقمية.",
+                textRef: "الآثار التنظيمية والإدارية - ص 59"
+            },
+
+            // ========== الفصل الرابع: المنصات والبرمجيات المكتبية (ص 61 - 74) ==========
+            {
+                id: 76, chapter: 4, level: 1, type: "مصطلح", concept: "مفهوم المنصات التعليمية الإلكترونية",
+                question: "اختر المصطلح المناسب: بيئة تعليمية تفاعلية توظف تقنية الويب وتجمع بين ميزات أنظمة إدارة المحتوى الإلكتروني وشبكات التواصل الاجتماعي، وتمكن المعلمين من نشر الدروس والواجبات وتقسيم الطلاب لمجموعات.",
+                options: ["الحزمة المكتبية", "المنصات التعليمية الإلكترونية", "محركات البحث الأكاديمية", "بوابات الدفع الإلكتروني"],
+                correctAnswer: "المنصات التعليمية الإلكترونية",
+                explanation: "المنصات التعليمية الإلكترونية هي بيئة تفاعلية توظف الويب وتجمع بين إدارة المحتوى وميزات شبكات التواصل الاجتماعي (مثل فيسبوك وتويتر) لدعم مخرجات عالية الجودة.",
+                textRef: "المنصات التعليمية الإلكترونية - ص 62"
+            },
+            {
+                id: 77, chapter: 4, level: 1, type: "mcq", concept: "مفهوم أنظمة LMS الأساسي",
+                question: "ما هو التعريف الدقيق للمصطلح العلمي LMS (Learning Management System)؟",
+                options: [
+                    "نظام لإعداد وصناعة الرسوم والأشكال المتحركة التعليمية وتصميم الصور داخل المنصة",
+                    "نظام رقمي مصمم خصيصاً لإدارة مقررات إلكترونية وإتاحة عمل تعاوني بين المعلم والمتعلم وأتمتة عمليات إدارة التعلم",
+                    "برمجية متخصصة لضغط وفك الملفات وصيانة الأجهزة المرفقة بالمدرسة",
+                    "قاعدة بيانات خاصة فقط بطباعة الشهادات والوثائق الإدارية للموظفين"
+                ],
+                correctAnswer: "نظام رقمي مصمم خصيصاً لإدارة مقررات إلكترونية وإتاحة عمل تعاوني بين المعلم والمتعلم وأتمتة عمليات إدارة التعلم",
+                explanation: "نظام LMS يقوم بأتمتة إدارة التعلم (مثل عرض الجداول، تسجيل الطلاب، إدخال الدرجات والتقارير) ولكنه لا يختص بإنشاء المحتوى وتطويره لعدم امتلاكه أدوات تأليف بشكل ذاتي.",
+                textRef: "LMS أنظمة إدارة التعلم - ص 62"
+            },
+            {
+                id: 78, chapter: 4, level: 1, type: "صح وخطأ", concept: "أدوات التأليف في LMS",
+                question: "صح أم خطأ: تملك أنظمة إدارة التعلم التقليدية (LMS) أدوات تأليف المحتوى وتطويره (Authoring Tools) بشكل مدمج، ولذا تعتبر أنظمة مختصة بإنشاء المحتوى الرقمي وتطويره.",
+                options: ["صح", "خطأ"],
+                correctAnswer: "خطأ",
+                explanation: "العبارة خاطئة. أنظمة LMS تقوم بتوصيل المحتوى للمتعلمين دون امتلاكها لأدوات تأليف المحتوى وتطويره بشكل مدمج، وبالتالي فهي ليست نظاماً مختصاً بإنشاء وتطوير المحتوى ذاتياً.",
+                textRef: "LMS أنظمة إدارة التعلم - ص 62-63"
+            },
+            {
+                id: 79, chapter: 4, level: 1, type: "أكمل", concept: "مكونات نظام LCMS",
+                question: "أكمل الفراغ: تمنح أنظمة LCMS القدرة على إنشاء وتعديل وإدارة المحتوى التعليمي بفعالية عبر إنشاء مستودع (Repository) يحتوي على عناصر التعلم وتسمى ........",
+                options: ["أدوات التأليف", "العناصر التعليمية (Learning Object)", "بيئة التمكين الإداري", "أدوات التلعيب المدمجة"],
+                correctAnswer: "العناصر التعليمية (Learning Object)",
+                explanation: "يحتوي مستودع نظام LCMS على العناصر التعليمية (Learning Objects) مما يسهل التحكم فيها، تجميعها، توزيعها، وإعادة استخدامها بما يناسب العملية التعليمية.",
+                textRef: "LCMS أنظمة إدارة المحتوى التعليمي - ص 63"
+            },
+            {
+                id: 80, chapter: 4, level: 1, type: "mcq", concept: "معادلة تكامل LCMS",
+                question: "الدمج الفعلي والتكامل لتقديم نظام متكامل لإدارة العملية التعليمية والمحتوى معاً يتمثل في المعادلة العلمية التالية:",
+                options: [
+                    "CMS + LMS = LCMS",
+                    "LMS + LOR = VLE",
+                    "SMS + LCMS = LMS",
+                    "CMS + LOR = SMS"
+                ],
+                correctAnswer: "CMS + LMS = LCMS",
+                explanation: "تجمع أنظمة LCMS بين أنظمة إدارة المحتوى (CMS) وأنظمة إدارة التعلم (LMS) لتشكل نظاماً متكاملاً لإدارة العملية التعليمية والمحتوى معاً.",
+                textRef: "تكامل الأنظمة - ص 63"
+            },
+            {
+                id: 81, chapter: 4, level: 2, type: "mcq", concept: "ميزة الواجهة الرسومية GUI",
+                question: "أي مما يلي يصف بدقة فائدة ميزة 'الواجهة الرسومية GUI' (Graphical User Interface) في منصات التعلم الإلكتروني؟",
+                options: [
+                    "تتيح للموظفين طباعة الشهادات الورقية دون الحاجة لكمبيوتر مادي",
+                    "تسهل التعامل مع النظام من خلال الأزرار والصور والقوائم مع قدرة المتعلم على تغيير بعض خصائصها كلون الواجهة",
+                    "تمنع الطلاب من استخدام برمجيات المحادثة التفاعلية لحفظ الخصوصية أمنياً",
+                    "تقوم بتلقين المحتوى للمتعلم تلقائياً بناءً على موعد الحضور والانصراف المجدول"
+                ],
+                correctAnswer: "تسهل التعامل مع النظام من خلال الأزرار والصور والقوائم مع قدرة المتعلم على تغيير بعض خصائصها كلون الواجهة",
+                explanation: "ميزة GUI توفر واجهة بصرية سهلة الاستخدام تحتوي على أزرار وقوائم وصور، وتمنح المستخدم مرونة في تعديل سماتها الأساسية مثل الألوان لزيادة الملاءمة الشخصية.",
+                textRef: "مزايا أنظمة إدارة التعلم الإلكتروني (نقطة 1) - ص 63"
+            },
+            {
+                id: 82, chapter: 4, level: 2, type: "mcq", concept: "مفهوم التخصيص Customization",
+                question: "يرتبط مفهوم 'التخصيص' (Customization) في أنظمة إدارة التعلم بالقدرة على:",
+                options: [
+                    "دفع الرسوم الدراسية للمقررات غير المجانية وتأكيد الحجز المالي",
+                    "التحكم في طريقة عمل واجهة النظام مثل تغيير اللغة أو طريقة تنبيه المستخدم بوجود مشاركات أو رسائل جديدة",
+                    "إنشاء العناصر التعليمية داخل المستودع وإعادة استخدامها دولياً",
+                    "الربط التلقائي بأجهزة التحكم وعروض الباوربوينت دون إنترنت"
+                ],
+                correctAnswer: "التحكم في طريقة عمل واجهة النظام مثل تغيير اللغة أو طريقة تنبيه المستخدم بوجود مشاركات أو رسائل جديدة",
+                explanation: "ميزة التخصيص تتيح تلبية التفضيلات المختلفة للمستفيدين من خلال التحكم بواجهة النظام وتغيير اللغة أو ضبط إعدادات التنبيهات والبريد الإلكتروني.",
+                textRef: "مزايا أنظمة إدارة التعلم الإلكتروني (نقطة 3) - ص 64"
+            },
+            {
+                id: 83, chapter: 4, level: 2, type: "mcq", concept: "التواصل المتزامن واللامتزامن",
+                question: "بناءً على الفصل، ما هو التصنيف الدقيق لطرق التواصل المدعومة في غرف الدردشة ومنتديات النقاش بالمنصة؟",
+                options: [
+                    "تواصل أحادي الاتجاه فقط لمنع التشتت الطلابي وتثبيت المادة",
+                    "ينقسم الاتصال إلى متزامن (مباشر مثل غرف الدردشة Chat Room) وغير متزامن (غير مباشر مثل منتديات النقاش Discussion Forums)",
+                    "تواصل يعتمد حصرياً على إرسال البريد المطبوع ورقياً عبر إدارة البريد بالدولة",
+                    "تواصل مشفر يمنع المعلمين من الاطلاع على محادثات الطلاب"
+                ],
+                correctAnswer: "ينقسم الاتصال إلى متزامن (مباشر مثل غرف الدردشة Chat Room) وغير متزامن (غير مباشر مثل منتديات النقاش Discussion Forums)",
+                explanation: "يدعم التواصل في المنصات الاتصال المباشر المتزامن (Synchronous) والاتصال غير المباشر اللامتزامن (Asynchronous) لتذكير الطلاب وإتاحة الحوار والمناقشة المستمرة.",
+                textRef: "مزايا أنظمة إدارة التعلم الإلكتروني (نقطة 6) - ص 64"
+            },
+            {
+                id: 84, chapter: 4, level: 2, type: "mcq", concept: "مفهوم التعلم المدمج Blended Learning",
+                question: "ما هو المفهوم العلمي الدقيق لـ 'التعلم المدمج / المخلوط / الهجين' (Blended Learning) كما ورد بنص الفصل؟",
+                options: [
+                    "التعلم الذي يعتمد على استخدام الهواتف الذكية في المواصلات العامة فقط",
+                    "إدارة المقررات من خلال إتاحة بعضها عبر الإنترنت (أونلاين) جنباً إلى جنب مع التعلم وجهاً لوجه (Face-to-Face)",
+                    "دمج تكنولوجيا الواقع الافتراضي مع عتاد المعالجة الفكرية للحاسوب",
+                    "التعلم الذي يجمع بين طلاب مدارس مختلفة في فصل افتراضي موحد"
+                ],
+                correctAnswer: "إدارة المقررات من خلال إتاحة بعضها عبر الإنترنت (أونلاين) جنباً إلى جنب مع التعلم وجهاً لوجه (Face-to-Face)",
+                explanation: "التعلم المدمج أو المخلوط أو الهجين يجمع بين التعلم التقليدي المباشر وجهاً لوجه والتعلم الإلكتروني عبر شبكة الإنترنت.",
+                textRef: "مزايا أنظمة إدارة التعلم الإلكتروني (نقطة 13) - ص 66"
+            },
+            {
+                id: 85, chapter: 4, level: 2, type: "mcq", concept: "مفهوم التلعيب Gamification",
+                question: "تستخدم المنصات التعليمية الحديثة عنصر 'التلعيب' (Gamification) في الموقف التعليمي. أي من العناصر التالية يمثل التلعيب؟",
+                options: [
+                    "تنزيل الألعاب الترفيهية غير الهادفة وعزل الطلاب عن المقرر",
+                    "استخدام عناصر اللعب مثل (النقاط، الأوسمة، التحديات، والمستويات والتنافس) لبناء حوافز ومكافآت ترفع الدافعية والاندماج",
+                    "تحويل واجهة المنصة إلى لوحة تحكم ميكانيكية لخدمات الصيانة",
+                    "تقسيم الطلاب إلى مجموعات عمل يدوية لصناعة مجسمات كرتونية بالصف"
+                ],
+                correctAnswer: "استخدام عناصر اللعب مثل (النقاط، الأوسمة، التحديات، والمستويات والتنافس) لبناء حوافز ومكافآت ترفع الدافعية والاندماج",
+                explanation: "التلعيب يعتمد على دمج آليات وعناصر اللعب كالأوسمة والنقاط والتحديات في الموقف التعليمي لرفع دافعية الطلاب وجعلهم أكثر اندماجاً مع المادة.",
+                textRef: "مزايا أنظمة إدارة التعلم الإلكتروني (نقطة 14) - ص 66"
+            },
+            {
+                id: 86, chapter: 4, level: 3, type: "mcq", concept: "تصنيف المفتوح والتجاري لـ LMS",
+                question: "تنقسم أنظمة إدارة التعلم من حيث 'المصدر' إلى قسمين رئيسيين. اختر الأمثلة الصحيحة لكل منهما:",
+                options: [
+                    "أنظمة مفتوحة المصدر مجانية مثل (Moodle)، وأنظمة تجارية مغلقة المصدر تتطلب ترخيصاً مثل (Blackboard)",
+                    "أنظمة مفتوحة المصدر تتطلب دفع رسوم مثل (Tadarus)، وأنظمة تجارية مجانية مثل (JUSUR)",
+                    "أنظمة عامة جاهزة ومطورة دون فرق ملموس تقنياً بين المصادر",
+                    "أنظمة مطورة محلياً للجامعات وتخضع لقوانين الاحتكار التجاري فقط"
+                ],
+                correctAnswer: "أنظمة مفتوحة المصدر مجانية مثل (Moodle)، وأنظمة تجارية مغلقة المصدر تتطلب ترخيصاً مثل (Blackboard)",
+                explanation: "أنظمة إدارة التعلم تقسم حسب المصدر إلى: مفتوحة المصدر (Open Source) كـ Moodle وهي مجانية وقابلة للتعديل والتدوير، وأنظمة تجارية مغلقة (Commercial) كـ Blackboard وتدارس وتتطلب ترخيص استخدام من شركة ربحية.",
+                textRef: "أنواع أنظمة إدارة التعلم - ص 66"
+            },
+            {
+                id: 87, chapter: 4, level: 3, type: "mcq", concept: "نظام جسور العربي JUSUR",
+                question: "متى تم إطلاق نظام إدارة التعلم العربي 'جسور' (JUSUR)؟ ومن هي الجهة التي ساهمت في تقديمه بالتعاون مع المركز الوطني السعودي؟",
+                options: [
+                    "عام 2005 بالتعاون مع شركة مايكروسوفت العالمية",
+                    "عام 2007 بالتعاون مع الجامعة الماليزية المفتوحة (Open University Malaysia)",
+                    "عام 2012 بالتعاون مع شركة حرف لتقنية المعلومات وبتمويل خاص",
+                    "عام 2018 بالتعاون مع جامعة الإمام محمد بن سعود الإسلامية"
+                ],
+                correctAnswer: "عام 2007 بالتعاون مع الجامعة الماليزية المفتوحة (Open University Malaysia)",
+                explanation: "أُطلق نظام 'جسور' في عام 2007 من قِبل المركز الوطني للتعلم الإلكتروني والتعليم عن بعد بالمملكة العربية السعودية بالتعاون مع الجامعة الماليزية المفتوحة بهدف توفير بيئة تفاعلية لطلاب التعليم العالي.",
+                textRef: "أمثلة على أنظمة إدارة التعلم: نظام جسور - ص 68"
+            },
+            {
+                id: 88, chapter: 4, level: 3, type: "mcq", concept: "نظام تدارس Tadarus",
+                question: "أي من الجهات التالية طورت نظام 'تدارس' (Tadarus)؟ وأين يتركز استخدامه التعليمي الأبرز؟",
+                options: [
+                    "طورته شركة مايكروسوفت ويستخدم في المدارس الثانوية العامة والخاصة",
+                    "طورته شركة حرف لتقنية المعلومات، ويستخدم في عمادة التعليم عن بعد بجامعة الإمام محمد بن سعود الإسلامية وفي المقرأة الإلكترونية العالمية",
+                    "طورته الكوادر الهندسية الفلسطينية لكسر الحصار التكنولوجي والإداري بالجامعات",
+                    "طورته جامعة الدول العربية كمنصة إقليمية موحدة للمحتوى الرقمي"
+                ],
+                correctAnswer: "طورته شركة حرف لتقنية المعلومات، ويستخدم في عمادة التعليم عن بعد بجامعة الإمام محمد بن سعود الإسلامية وفي المقرأة الإلكترونية العالمية",
+                explanation: "نظام 'تدارس' طُوّر من قِبل شركة 'حرف' لتقنية المعلومات ويُطبّق في مؤسسات كبرى مثل عمادة التعليم عن بعد بجامعة الإمام محمد بن سعود، والمقرأة الإلكترونية العالمية لتحفيظ القرآن الكريم.",
+                textRef: "أمثلة على أنظمة إدارة التعلم: نظام تدارس - ص 68"
+            },
+            {
+                id: 89, chapter: 4, level: 3, type: "mcq", concept: "تاريخ إعلان Microsoft Office والبدايات",
+                question: "متى وأين تم الإعلان لأول مرة تاريخياً عن حزمة البرامج المكتبية Microsoft Office من قِبل بيل جيتس؟",
+                options: [
+                    "عام 1985 في معرض تكنولوجي خاص ببرلين بألمانيا",
+                    "في 1 أغسطس 1988 في المعرض التجاري COMDEX في لاس فيغاس بالولايات المتحدة الأمريكية",
+                    "عام 1996 بالتزامن مع إطلاق الربط الشبكي الداخلي لتقليص استخدام الورق",
+                    "عام 2013 بإطلاق النسخة السحابية المدمجة في مستعرض الويب"
+                ],
+                correctAnswer: "في 1 أغسطس 1988 في المعرض التجاري COMDEX في لاس فيغاس بالولايات المتحدة الأمريكية",
+                explanation: "أعلن بيل جيتس لأول مرة عن حزمة Microsoft Office في 1 أغسطس 1988 في المعرض التجاري COMDEX بلاس فيغاس كحزمة مكتبية تجمع تطبيقات الإنتاجية.",
+                textRef: "حزمة البرامج المكتبية - ص 68"
+            },
+            {
+                id: 90, chapter: 4, level: 3, type: "mcq", concept: "مكونات الإصدار الأول لأوفيس والتطوير المستمر",
+                question: "ما هي التطبيقات الثلاثة الأساسية التي احتواها الإصدار الأول لحزمة البرامج المكتبية Microsoft Office؟",
+                options: [
+                    "وورد، أوتلوك، ونظام تدارس العربي",
+                    "مايكروسوفت وورد (Word)، مايكروسوفت إكسل (Excel)، ومايكروسوفت باوربوينت (PowerPoint)",
+                    "البريد الإلكتروني، أدوات التلعيب، والفصول الافتراضية",
+                    "الماسحات الضوئية، الماسنجر، والدروب بوكس"
+                ],
+                correctAnswer: "مايكروسوفت وورد (Word)، مايكروسوفت إكسل (Excel)، ومايكروسوفت باوربوينت (PowerPoint)",
+                explanation: "اشتمل الإصدار الأول لحزمة أوفيس المكتبية على ثلاثة تطبيقات إنتاجية رئيسية هي: برنامج تحرير النصوص Word، الجداول المحاسبية Excel، والعروض التقديمية PowerPoint.",
+                textRef: "حزمة البرامج المكتبية - ص 69"
+            },
+            {
+                id: 91, chapter: 4, level: 4, type: "mcq", concept: "تطبيق كاهوت Kahoot ومزاياه",
+                question: "يُعد تطبيق كاهوت (Kahoot) أداة تعليمية فاعلة. أي من البدائل التالية يعبر بدقة عن مزايا كاهوت ووظائفه؟",
+                options: [
+                    "برنامج مخصص لطباعة بطاقات الاستجابة السريعة للطلاب ومنع التنافس بالصف",
+                    "برنامج تعليمي مجاني باللعب يتيح تصميم أسئلة متعددة الخيارات بأي لغة ولأي مستوى، ويدمج مقاطع الفيديو لرفع دافعية التعلم ومساعدة المتعلم الخجول على المشاركة وبناء ثقته بالنفس",
+                    "قاعدة بيانات سحابية متخصصة في جدولة الاختبارات السنوية وإدخال الدرجات وأرشفة ملفات المعلمين",
+                    "برنامج يمنع الطلاب من استخدام هواتفهم الذكية داخل الفصول الافتراضية"
+                ],
+                correctAnswer: "برنامج تعليمي مجاني باللعب يتيح تصميم أسئلة متعددة الخيارات بأي لغة ولأي مستوى، ويدمج مقاطع الفيديو لرفع دافعية التعلم ومساعدة المتعلم الخجول على المشاركة وبناء ثقته بالنفس",
+                explanation: "تطبيق كاهوت يمثل وسيلة ممتازة لتفعيل التلعيب باللعب في الفصول، ويساعد الطالب الخجول على المشاركة وبناء الثقة بالنفس، ويدمج الفيديوهات لتنشيط الدافعية وزيادة الحماس والتنافس.",
+                textRef: "تطبيق Kahoot - ص 70"
+            },
+            {
+                id: 92, chapter: 4, level: 4, type: "mcq", concept: "برنامج بليكرز Plickers الفريد",
+                question: "ما هي الميزة الكبرى والفريدة لبرنامج بليكرز (Plickers) والتي تجعله ملائماً للغاية للمدارس والمناطق التي تفتقر للتكنولوجيا والأجهزة مع الطلاب؟",
+                options: [
+                    "أنه يتطلب حواسيب متطورة واتصالاً سريعاً بالإنترنت لكل طالب على حدة داخل الفصل الدراسي",
+                    "أنه لا يتطلب من الطلاب حيازة أي جهاز (حيث يكتفي الطلاب برفع بطاقات ورقية مطبوعة برمز QR)، وتستلزم العملية فقط جهازاً واحداً مع المعلم متصل بالإنترنت ومزود بكاميرا لقراءة البطاقات",
+                    "أنه يعمل كأداة لكسر الحصار عبر استثمارات ضخمة في قطاع النقل وتأهيل الكوادر فنياً ببلاد الشام",
+                    "أنه مخصص فقط للمستويات الجامعية المتقدمة ولا يتوافق مع أجهزة الهواتف الذكية أو الأجهزة المحمولة"
+                ],
+                correctAnswer: "أنه لا يتطلب من الطلاب حيازة أي جهاز (حيث يكتفي الطلاب برفع بطاقات ورقية مطبوعة برمز QR)، وتستلزم العملية فقط جهازاً واحداً مع المعلم متصل بالإنترنت ومزود بكاميرا لقراءة البطاقات",
+                explanation: "برنامج بليكرز (Plickers) يقدم حلاً عبقرياً للفصول الدراسية؛ فهو لا يستلزم حيازة الطلاب لأية أجهزة إلكترونية، بل يجيبون برفع بطاقات ورقية مطبوعة ذات رموز استجابة سريعة، ويقوم المعلم بمسحها بهاتفه لقراءتها فورياً والحصول على تقارير.",
+                textRef: "برنامج PLICKERS - ص 70 (والنصوص المقابلة ص 70-71)"
+            },
+            {
+                id: 93, chapter: 4, level: 4, type: "mcq", concept: "منصة أكادوكس Acadox ومميزاتها",
+                question: "تُصنف منصة أكادوكس (Acadox) بأنها منصة تعليمية واعدة. ما هي السمتان الرئيسيتان لأكادوكس بخصوص الفئة المستهدفة واللغات؟",
+                options: [
+                    "منصة مخصصة للشركات والقطاعات التجارية فقط، وتدعم اللغة الإنجليزية بمستواها الميكانيكي الروتيني",
+                    "منصة تساعد على تنظيم الحياة الأكاديمية والاجتماعية وتخطيط المسيرة، متاحة مجاناً للمعلمين والطلاب عبر العالم باللغتين العربية والإنجليزية وتوفر أدوات فعالة وإنتاجية",
+                    "منصة تتوافق فقط مع إصدارات نظام ماك أو إس ولا يمكن تصفحها من الأجهزة المحمولة",
+                    "قاعدة بيانات خاصة فقط بأرشفة مستندات الأقسام الإدارية والورقية"
+                ],
+                correctAnswer: "منصة تساعد على تنظيم الحياة الأكاديمية والاجتماعية وتخطيط المسيرة، متاحة مجاناً للمعلمين والطلاب عبر العالم باللغتين العربية والإنجليزية وتوفر أدوات فعالة وإنتاجية",
+                explanation: "أكادوكس (Acadox) هي منصة تعليمية تسهم في تنظيم الحياة الأكاديمية والاجتماعية للمستفيد، وتتيح التسجيل ومشاركة المحتوى مع الزملاء مجاناً باللغتين العربية والإنجليزية.",
+                textRef: "تطبيق acadox - ص 72"
+            },
+            {
+                id: 94, chapter: 4, level: 4, type: "mcq", concept: "ميزة تطبيقات الكويز الخالية من الإنترنت",
+                question: "يذكر الفصل بعض تطبيقات صانع الاختبارات (Quiz Maker) التفاعلية. ما هي الميزة التقنية الهامة المذكورة لبعض هذه البرامج في 'الآب ستور'؟",
+                options: [
+                    "الحاجة لاتصال دائم وسريع بالإنترنت وبثلاثة خوادم مختلفة أمنياً لتشغيله",
+                    "أن البرنامج مجاني بالآب ستور، ولا يحتاج إلى إنترنت بعد تحميله وتثبيته، ويدعم تقسيم الطلبة لمجموعات أو أفراد بطريقة تفاعلية مع تحديد الوقت",
+                    "استخدام تقنيات الميكروفيلم وأشرطة الكاسيت الممنططة تاريخياً لعرض النتائج",
+                    "الربط التلقائي والإجباري بشبكة الإكسترانت لجميع موردي المواد الخام والعملاء"
+                ],
+                correctAnswer: "أن البرنامج مجاني بالآب ستور، ولا يحتاج إلى إنترنت بعد تحميله وتثبيته، ويدعم تقسيم الطلبة لمجموعات أو أفراد بطريقة تفاعلية مع تحديد الوقت",
+                explanation: "من مميزات تطبيقات صانع الاختبارات المذكورة أنها مجانية في متجر التطبيقات (الآب ستور) وتتميز بإمكانية تشغيلها دون الحاجة لاتصال بالإنترنت بعد عملية تحميلها وتثبيتها، مع دعمها لتحديد الوقت وتقسيم الطمبة.",
+                textRef: "تطبيق QUIZ MAKER - ص 73"
+            },
+            {
+                id: 95, chapter: 4, level: 4, type: "mcq", concept: "أوفيس 365 وتحول الإيرادات",
+                question: "طورت مايكروسوفت برنامج 'أوفيس 365' (Office 365) السحابي. في أي عام تجاوزت إيرادات أوفيس 365 إيرادات مبيعات التراخيص التقليدية لأول مرة؟",
+                options: [
+                    "عام 2007 بالتزامن مع إطلاق جسور",
+                    "عام 2012 بإعلان شركة سوفت بيديا عن استخدام الحزمة",
+                    "عام 2017 مبيعات التراخيص التقليدية",
+                    "عام 2019 بإصدار النسخة المحدثة لسطح المكتب"
+                ],
+                correctAnswer: "عام 2017 مبيعات التراخيص التقليدية",
+                explanation: "في عام 2017، ولأول مرة تاريخياً، تجاوزت إيرادات مايكروسوفت من اشتراكات خدمة أوفيس 365 السحابية (Office 365) إيرادات مبيعات تراخيص البرامج التقليدية المباعة كنسخ سطح مكتب محلية.",
+                textRef: "حزمة البرامج المكتبية - ص 69"
+            },
+            {
+                id: 96, chapter: 4, level: 5, type: "سيناريو", concept: "ميزة تتبع ومراقبة الأجهزة المحمولة للمعلم",
+                question: "موقف تطبيقي: يرغب أحد المعلمين في عرض ملف بوربوينت لطلابه ومراقبة سير العرض عبر هاتفه الآيفون وتحريك الشرائح عن بعد كجهاز تحكم (ريموت)، مع كتابة ملاحظات خاصة وتوضيحية على الآيباد لا تظهر للطلاب على الشاشة الرئيسية للعرض. بناءً على الفصل، هل تدعم التكنولوجيا المذكورة هذا السيناريو؟",
+                options: [
+                    "لا، فمشاركة البوربوينت تقتضي ظهور كل حرف وصورة وعلامة للجميع بشكل موحد دون أي استثناء",
+                    "نعم، يدعم البرنامج استخدام الآيفون كـ ريموت للتحكم بالعروض عن بعد، وربط الآيفون بالآيباد لكتابة الملاحظات التوضيحية للمعلم والتي لا تظهر للطلاب على شاشة العرض",
+                    "نعم، ولكن تتطلب هذه الميزة توصيلاً سلكياً مباشراً وشراء حزمة خوادم تجارية مغلقة المصدر",
+                    "لا، فملفات البوربوينت لا يمكن فتحها أو مزامنتها عبر أجهزة الآيفون أو الآيباد إطلاقاً"
+                ],
+                correctAnswer: "نعم، يدعم البرنامج استخدام الآيفون كـ ريموت للتحكم بالعروض عن بعد، وربط الآيفون بالآيباد لكتابة الملاحظات التوضيحية للمعلم والتي لا تظهر للطلاب على شاشة العرض",
+                explanation: "من المميزات الهامة المذكورة في الفصل إمكانية استخدام الهاتف كجهاز تحكم (ريموت) وربط الآيفون بالآيباد مما يفيد المعلمين في تدوين ملاحظات تفصيلية تفيدهم في الشرح دون ظهورها أمام الطلاب على الشاشة الكبيرة.",
+                textRef: "مزايا وتطبيقات البرمجيات المكتبية - ص 73-74"
+            },
+            {
+                id: 97, chapter: 4, level: 5, type: "تحليل", concept: "تحليل أدوار المعلم في البيئة الرقمية",
+                question: "تتغير أدوار المعلم عند التحول للمنصات التعليمية الإلكترونية والتعلم النشط. أي مما يلي يمثل 'الدور الإيجابي والحديث' للمعلم في المنصة الإلكترونية؟",
+                options: [
+                    "التركيز الحصري على التلقين المباشر واحتكار المعرفة ومنع النقاشات الصفية والطلابية والتمسك بالروتين المكتبي",
+                    "تنظيم بيئة التعلم، حث الطلاب وتشجيعهم على الانخراط والمشاركة، تكييف أساليب التقييم، تقديم الإرشاد الأكاديمي، وتوجيه الطلاب لمصادر التعلم الإضافية على الشبكة",
+                    "إلغاء أساليب التقييم والاختبارات كلياً والاكتفاء بمتابعة الحضور والانصراف آلياً بنهاية الفصل",
+                    "الامتناع التام عن توجيه الأسئلة وترك الطلاب ليتعلموا ذاتياً بنسبة 100% دون تدخل توجيهي"
+                ],
+                correctAnswer: "تنظيم بيئة التعلم، حث الطلاب وتشجيعهم على الانخراط والمشاركة، تكييف أساليب التقييم، تقديم الإرشاد الأكاديمي، وتوجيه الطلاب لمصادر التعلم الإضافية على الشبكة",
+                explanation: "يتحول دور المعلم في عصر المنصات من ملقن تقليدي إلى منظم، مرشد أكاديمي، ميسر للتعلم، ومحفز للطلاب على المشاركة وتتبع أداء مخرجات العملية التعليمية.",
+                textRef: "دور المعلم عند استخدام المنصات التعليمية - ص 67"
+            },
+            {
+                id: 98, chapter: 4, level: 5, type: "مقارنة", concept: "تحليل مقارنة LMS مع LCMS",
+                question: "في ضوء تحليلك لمحتوى الفصل الرابع، أي من البدائل التالية يوضح بدقة وبطريقة منهجية الفارق الجوهري الرئيسي بين نظام LMS ونظام LCMS؟",
+                options: [
+                    "LMS هو نظام مخصص لطلاب الكليات العلمية فقط، في حين أن LCMS مخصص لطلاب كليات الإنسانيات والتربية",
+                    "LMS يركز على توصيل وإدارة العملية التعليمية بأكملها للمتعلمين ولا يحتوي ذاتياً على أدوات لتأليف المحتوى، بينما LCMS يركز على إنشاء وتعديل وإعادة استخدام وإدارة المحتوى التعليمي عبر مستودع عناصر التعلم",
+                    "LMS نظام تجاري مغلق المصدر بالكامل ومحتكر، بينما LCMS نظام مفتوح المصدر تملكه جهة عامة ولا يجوز بيعه",
+                    "لا توجد فروق جوهرية على الإطلاق فهما مسميان تجاريان مختلفان لنفس المنصة السحابية الموحدة"
+                ],
+                correctAnswer: "LMS يركز على توصيل وإدارة العملية التعليمية بأكملها للمتعلمين ولا يحتوي ذاتياً على أدوات لتأليف المحتوى، بينما LCMS يركز على إنشاء وتعديل وإعادة استخدام وإدارة المحتوى التعليمي عبر مستودع عناصر التعلم",
+                explanation: "الفارق الجوهري يكمن في نطاق العمل وصناعة المحتوى: نظام LMS يدير ويوجه وينقل العملية التعليمية دون أدوات تأليف ذاتية مدمجة، بينما نظام LCMS يمنح المستخدمين ميزة إنشاء وتعديل وإعادة استخدام المحتوى عبر مستودع العناصر التعليمية.",
+                textRef: "مقارنة وتكامل lms و lcms - ص 62-63"
+            },
+            {
+                id: 99, chapter: 4, level: 5, type: "سيناريو", concept: "سيناريو تطبيق التلعيب وتنشيط الصف",
+                question: "موقف تطبيقي: لاحظ معلم مادة التطبيقات الرقمية خمولاً وتكاسلاً بين طلابه وتجنبهم المشاركة في الأنشطة الصفية خوفاً من إعطاء إجابات خاطئة أمام زملائهم. أي من تطبيقات المنصات يعد الأنسب والأكثر فاعلية لتحفيز دافعيتهم وبناء ثقتهم ومساعدتهم بأسلوب تنافسي شيق باللعب؟",
+                options: [
+                    "إلزامهم بحفظ ملفات الأرشيف الورقي وإجراء اختبارات تحريرية صامتة دون وقت محدد",
+                    "استخدام تطبيق كاهوت (Kahoot) لتصميم مسابقات تعليمية تفاعلية تتضمن دمج الفيديوهات مما يزيد دافعيتهم ويشجعهم على الانتقال من الجو التقليدي لجو الحماس",
+                    "استخدام نظام تدارس المغلق لإجبارهم على مراجعة المحتوى بصورة هرمية صارمة",
+                    "عقدهم ندوة مادية تقليدية بحضور ممثلي وزارات التعليم العالي دون دمج للتكنولوجيا"
+                ],
+                correctAnswer: "استخدام تطبيق كاهوت (Kahoot) لتصميم مسابقات تعليمية تفاعلية تتضمن دمج الفيديوهات مما يزيد دافعيتهم ويشجعهم على الانتقال من الجو التقليدي لجو الحماس",
+                explanation: "كاهوت (Kahoot) هو برنامج يهدف لإشعال الحماس التنافسي في الفصول ويسهم بفاعلية في كسر رهاب المشاركة وبناء ثقة الطالب الخجول وزيادة الدافعية التعليمية.",
+                textRef: "تطبيق Kahoot - ص 70"
+            },
+            {
+                id: 100, chapter: 4, level: 5, type: "خدعة/امتحان", concept: "تكامل حزمة أوفيس مع السحابة",
+                question: "سؤال خادع من الامتحانات: تمنح مايكروسوفت تحديثات الميزات الجديدة ومزايا تكامل الحوسبة السحابية لجميع المستخدمين الذين يشترون حزم برمجيات أوفيس المباعة بموجب شروط الترخيص التقليدي المحلي لسطح المكتب مدى الحياة وبشكل مجاني كلياً. صح أم خطأ؟",
+                options: ["صح", "خطأ"],
+                correctAnswer: "خطأ",
+                explanation: "العبارة خاطئة تماماً. مايكروسوفت تحصر تلقي تحديثات الميزات الجديدة وتكامل الحوسبة السحابية باستمرار لمشتركي نظام 'أوفيس 365' (Office 365) السحابي القائم على نموذج الاشتراكات الدورية، في حين لا تتوفر هذه المزايا بالضرورة لمالكي التراخيص التقليدية المباعة محلياً لسطح المكتب.",
+                textRef: "حزمة البرامج المكتبية - ص 69"
+            }
+        ];
+
+        // === حالة التطبيق البرمجية (State) ===
+        let selectedChapter = null;
+        let currentLevel = 1;
+        let queue = [];
+        let currentIndex = 0;
+        let selectedOption = null;
+        let showFeedback = false;
+
+        // إحصائيات الأداء
+        let mistakes = {};
+        let levelStats = { totalAsked: 0, correctOnFirstTry: 0 };
+
+        // === دوال إدارة الشاشات ===
+        function showScreen(screenId) {
+            document.getElementById('home-screen').style.display = 'none';
+            document.getElementById('quiz-screen').style.display = 'none';
+            document.getElementById('report-screen').style.display = 'none';
+            
+            document.getElementById(screenId).style.display = (screenId === 'home-screen') ? 'flex' : 'block';
+        }
+
+        function goHome() {
+            selectedChapter = null;
+            currentLevel = 1;
+            queue = [];
+            currentIndex = 0;
+            selectedOption = null;
+            showFeedback = false;
+            mistakes = {};
+            levelStats = { totalAsked: 0, correctOnFirstTry: 0 };
+            
+            showScreen('home-screen');
+        }
+
+        function startChapter(chapterNum) {
+            selectedChapter = chapterNum;
+            currentLevel = 1;
+            loadLevel(1);
+        }
+
+        // تحميل المستوى والأسئلة الخاصة به
+        function loadLevel(levelNum) {
+            currentLevel = levelNum;
+            
+            // فلترة الأسئلة بحسب الفصل والمستوى المحدد
+            const levelQuestions = allQuestions.filter(q => q.chapter === selectedChapter && q.level === currentLevel);
+            
+            // نسخ عميق للأسئلة في قائمة التشغيل لتجنب تشويه الكائنات الأصلية عند التكرار الذكي
+            queue = levelQuestions.map(q => ({...q}));
+            
+            currentIndex = 0;
+            selectedOption = null;
+            showFeedback = false;
+            mistakes = {};
+            levelStats = { totalAsked: levelQuestions.length, correctOnFirstTry: 0 };
+
+            // إخفاء صندوق الملاحظات والتغذية الراجعة
+            document.getElementById('feedback-block').style.display = 'none';
+
+            // تحديث العناوين في الواجهة
+            document.getElementById('chapter-title').textContent = 
+                (selectedChapter === 1) ? "الفصل الأول: الإدارة المدرسية والتعليمية" : 
+                (selectedChapter === 2) ? "الفصل الثاني: الإدارة الإلكترونية للتعليم" : 
+                (selectedChapter === 3) ? "الفصل الثالث: تطبيق الإدارة الإلكترونية" :
+                "الفصل الرابع: المنصات والبرمجيات المكتبية";
+            document.getElementById('level-title').textContent = getLevelName(currentLevel);
+
+            renderQuestion();
+            showScreen('quiz-screen');
+        }
+
+        function getLevelName(level) {
+            switch(level) {
+                case 1: return "المستوى الأول: مبتدئ (Beginner)";
+                case 2: return "المستوى الثاني: أساسي (Basic)";
+                case 3: return "المستوى الثالث: متوسط (Intermediate)";
+                case 4: return "المستوى الرابع: متقدم (Advanced)";
+                case 5: return "المستوى الخامس: خبير الامتحان (Exam Master)";
+                default: return "";
+            }
+        }
+
+        // === رسم وتحديث السؤال الحالي ===
+        function renderQuestion() {
+            if (currentIndex >= queue.length) {
+                renderReport();
+                return;
+            }
+
+            const currentQuestion = queue[currentIndex];
+            selectedOption = null;
+            showFeedback = false;
+
+            // تحديث المؤشرات بالأرقام
+            document.getElementById('question-type').textContent = currentQuestion.type;
+            document.getElementById('question-id').textContent = `معرّف السؤال: #${currentQuestion.id}`;
+            document.getElementById('question-text').textContent = currentQuestion.question;
+
+            // شريط التقدم
+            const progressPercent = (currentIndex / queue.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+            document.getElementById('progress-text-done').textContent = `أتممت ${currentIndex} سؤال من ${queue.length}`;
+            document.getElementById('progress-text-remain').textContent = `المتبقي: ${queue.length - currentIndex}`;
+
+            // بناء الخيارات تفاعلياً
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+
+            currentQuestion.options.forEach(option => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = option;
+                btn.onclick = () => handleAnswer(option, btn);
+                container.appendChild(btn);
+            });
+
+            // إخفاء صندوق التقييم مؤقتاً لحين الإجابة
+            document.getElementById('feedback-block').style.display = 'none';
+        }
+
+        // حساب وإرسال الإجابة
+        function handleAnswer(option, clickedBtn) {
+            if (showFeedback) return; // منع النقر المتعدد بعد تحديد خيار
+            
+            selectedOption = option;
+            showFeedback = true;
+
+            const currentQuestion = queue[currentIndex];
+            const isCorrect = (option === currentQuestion.correctAnswer);
+            const concept = currentQuestion.concept;
+
+            // تحديث أزرار الخيارات بالألوان المناسبة
+            const buttons = document.querySelectorAll('.option-btn');
+            buttons.forEach(btn => {
+                btn.disabled = true; // تعطيل جميع الأزرار
+                if (btn.textContent === currentQuestion.correctAnswer) {
+                    btn.classList.add('correct');
+                } else if (btn.textContent === selectedOption && !isCorrect) {
+                    btn.classList.add('wrong');
+                } else {
+                    btn.classList.add('muted');
+                }
+            });
+
+            // إعداد التغذية الراجعة وصندوق الاستمرار
+            const feedbackBlock = document.getElementById('feedback-block');
+            const feedbackStatus = document.getElementById('feedback-status');
+            const smartNotice = document.getElementById('smart-review-notice');
+            const explanationText = document.getElementById('feedback-explanation-text');
+            const refPill = document.getElementById('feedback-ref-pill');
+            const continueBtn = document.getElementById('continue-btn');
+
+            feedbackBlock.style.display = 'block';
+
+            if (isCorrect) {
+                feedbackBlock.className = 'feedback-block correct';
+                feedbackStatus.className = 'feedback-status correct';
+                feedbackStatus.textContent = 'أصبت! إجابة صحيحة ممتازة 👏';
+                smartNotice.style.display = 'none';
+
+                continueBtn.className = 'continue-btn correct-btn';
+                continueBtn.textContent = 'استمرار والذهاب للسؤال التالي ➔';
+
+                // إذا كانت الإجابة صحيحة من أول محاولة (لم يسبق الخطأ في هذا المفهوم في هذا التشغيل)
+                // نتحقق من أن معرف السؤال الأصلي هو المعروض للتأكد من عدم احتساب الأسئلة المكررة ذكياً كمحاولة أولى جديدة
+                const originalId = allQuestions.find(q => q.question === currentQuestion.question).id;
+                if (!mistakes[concept] && currentQuestion.id === originalId) {
+                    levelStats.correctOnFirstTry++;
+                }
+            } else {
+                feedbackBlock.className = 'feedback-block wrong';
+                feedbackStatus.className = 'feedback-status wrong';
+                feedbackStatus.textContent = 'أخطأت! العبارة خاطئة ❌';
+                smartNotice.style.display = 'inline-block';
+
+                continueBtn.className = 'continue-btn wrong-btn';
+                continueBtn.textContent = 'استمرار والذهاب للسؤال التالي ➔';
+
+                // تسجيل الخطأ لإعادة الجدولة وتحديد نقاط الضعف
+                mistakes[concept] = (mistakes[concept] || 0) + 1;
+
+                // نظام المراجعة الذكية: استنساخ السؤال الحالي ودفعه لذيل القائمة لضمان عدم انتهاء المستوى دون إتقانه
+                const clonedQuestion = {
+                    ...currentQuestion,
+                    id: currentQuestion.id + (Math.random() * 0.1) // توليد id فريد مؤقت
+                };
+                queue.push(clonedQuestion);
+            }
+
+            // كتابة الشرح والتفصيل العلمي
+            explanationText.textContent = currentQuestion.explanation;
+            refPill.textContent = currentQuestion.textRef;
+
+            continueBtn.onclick = () => {
+                currentIndex++;
+                renderQuestion();
+            };
+
+            // التمرير التلقائي لصندوق التغذية الراجعة على الأجهزة المحمولة
+            setTimeout(() => {
+                feedbackBlock.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
+        }
+
+        // === معالجة وعرض تقرير الأداء النهائي للمستوى ===
+        function renderReport() {
+            showScreen('report-screen');
+
+            // حساب دقة الإجابات للمحاولات الأولى
+            const accuracy = levelStats.totalAsked === 0 ? 0 : Math.round((levelStats.correctOnFirstTry / levelStats.totalAsked) * 100);
+            const isMastered = (accuracy >= 80);
+
+            // تحديث واجهة التقرير الدائري
+            const percentIndicator = document.getElementById('percent-indicator');
+            percentIndicator.textContent = `${accuracy}%`;
+            if (isMastered) {
+                percentIndicator.className = 'percent-circle success';
+            } else {
+                percentIndicator.className = 'percent-circle fail';
+            }
+
+            // تحديث الإحصائيات
+            document.getElementById('report-level-name').textContent = getLevelName(currentLevel);
+            document.getElementById('report-correct-count').textContent = levelStats.correctOnFirstTry;
+            document.getElementById('report-total-count').textContent = levelStats.totalAsked;
+            document.getElementById('report-extra-count').textContent = queue.length - levelStats.totalAsked;
+
+            // تحديث صندوق نقاط الضعف
+            const weakPointsBlock = document.getElementById('weak-points-block');
+            const weakPointsList = document.getElementById('weak-points-list');
+            const congratsPanel = document.getElementById('congrats-panel');
+            const masterExamPanel = document.getElementById('mastered-exam-panel');
+
+            weakPointsList.innerHTML = '';
+            congratsPanel.style.display = 'none';
+            masterExamPanel.style.display = 'none';
+
+            const mistakeKeys = Object.keys(mistakes);
+            if (mistakeKeys.length > 0) {
+                weakPointsBlock.style.display = 'block';
+                mistakeKeys.forEach(concept => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<strong>${concept}</strong> (أخطأت في هذا المفهوم ${mistakes[concept]} ${mistakes[concept] === 1 ? 'مرة واحدة' : 'مرات'})`;
+                    weakPointsList.appendChild(li);
+                });
+            } else {
+                weakPointsBlock.style.display = 'none';
+                congratsPanel.style.display = 'block';
+            }
+
+            // تفعيل أزرار الانتقال بناءً على نتيجة الإتقان
+            const nextBtn = document.getElementById('report-next-btn');
+            const retryBtn = document.getElementById('report-retry-btn');
+
+            if (isMastered) {
+                if (currentLevel < 5) {
+                    nextBtn.style.display = 'inline-block';
+                    nextBtn.textContent = `لقد أتقنت المستوى بنجاح! الانتقال للمستوى ${currentLevel + 1}`;
+                    nextBtn.onclick = () => {
+                        loadLevel(currentLevel + 1);
+                    };
+                    retryBtn.style.display = 'none';
+                } else {
+                    // إتمام المستوى الخامس (Exam Master) بنجاح
+                    nextBtn.style.display = 'none';
+                    retryBtn.style.display = 'none';
+                    masterExamPanel.style.display = 'block';
+                }
+            } else {
+                nextBtn.style.display = 'none';
+                retryBtn.style.display = 'inline-block';
+                retryBtn.onclick = () => {
+                    loadLevel(currentLevel);
+                };
+            }
+        }
+    </script>
+</body>
+</html>
